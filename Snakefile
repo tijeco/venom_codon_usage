@@ -1,4 +1,5 @@
-SAMPLES, = glob_wildcards("{sample}*_1.fq")  # read in file list
+SAMPLES, = glob_wildcards("{sample}_1.fq")  # read in file list
+
 print(SAMPLES)
 rule final:
     input:
