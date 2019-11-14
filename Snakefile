@@ -12,6 +12,8 @@ rule fastp:
     output:
         p1 = "{sample}_1.processed.fq",
         p2 = "{sample}_2.processed.fq"
+    conda:
+        "envs/fastp.yaml"
     shell:
         "fastp -c -r -M 3 -i {input.raw1} -I {input.raw2} -o {output.p1} -O {output.p2}"
 
