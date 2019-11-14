@@ -2,7 +2,7 @@ SAMPLES, = glob_wildcards("{sample}*_1.fq")  # read in file list
 
 rule final:
     input:
-        "{sample}_trinity"
+        expand("{sample}_trinity", sample = SAMPLES)
 
 rule fastp:
     input:
