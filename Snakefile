@@ -53,5 +53,7 @@ rule trinity:
         banana2 = "{sample}_2.processed_banana.fq"
     output:
         "{sample}_trinity"
+    conda:
+        "envs/trinity.yaml"
     shell:
         "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output {output}"
