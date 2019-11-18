@@ -1,3 +1,4 @@
+# This takes around 4 hours to complete
 fastq-dump --defline-seq '@$sn[_$rn]/$ri' --split-files SRR1964035
 mv SRR1964035_1.fastq Conus_consors_venom_1.fq
 mv SRR1964035_2.fastq Conus_consors_venom_2.fq
