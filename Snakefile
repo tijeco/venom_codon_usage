@@ -34,7 +34,6 @@ rule banana:
                         out.write(line) #out.write("@banana"+str(number)+"/1\n")
                     else:
                         out.write("@banana"+str(number)+"/1\n") #out.write(line)
-
                     number+=1
 
         with open(output.banana2,"w") as out:
@@ -52,8 +51,23 @@ rule trinity:
         banana1 = "{sample}_1.processed_banana.fq",
         banana2 = "{sample}_2.processed_banana.fq"
     output:
-        "{sample}_trinity"
+        trinity_dir = "{sample}_trinity",
+        trinity_fasta = "{sample}_trinity/Trinity.fasta"
     conda:
         "envs/trinity.yaml"
     shell:
-        "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output {output}"
+        "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output {output.trinity_dir}"
+
+
+rule transdecoder:
+    input:
+        "{sample}_trinity/Trinity.fasta"
+    output:
+        "{sample}_trinity/Trinity.fasta.TransDecoder_dir"
+    conda:
+        "envs/transdecoder.yaml"
+    shell:
+        """
+        TransDecoder.LongOrfs -t {input}  -m 30
+        TransDecoder.Predict -t {input} --single_best_orf
+        """
