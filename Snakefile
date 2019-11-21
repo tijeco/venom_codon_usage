@@ -71,3 +71,26 @@ rule transdecoder:
         TransDecoder.LongOrfs -t {input}  -m 30
         TransDecoder.Predict -t {input} --single_best_orf
         """
+rule supertranscript:
+    input:
+        "{sample}_trinity/Trinity.fasta.TransDecoder_dir"
+    output:
+        "{sample}_supertranscript.fasta"
+    conda:
+        "envs/trinity.yaml"
+    shell:
+        "supertranscript -i {input} "
+rule salmon:
+    input:
+        supertranscript = "{sample}_supertranscript.fasta"
+        banana1 = "{sample}_1.processed_banana.fq"
+        banana2 = "{sample}_2.processed_banana.fq"
+    output:
+        "{sample}_quant.sf"
+    conda:
+        "envs/trinity.yaml"
+    shell:
+        """
+        salmon index {input.supertranscript}
+        salmon quant {input.banana1}{input.banana2}
+        """
