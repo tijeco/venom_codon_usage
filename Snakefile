@@ -3,7 +3,59 @@ SAMPLES_venom, = glob_wildcards("{sample}_venom_1.fq")  # read in file list
 SAMPLES_body, = glob_wildcards("{sample}_body_1.fq")  # read in file list
 SAMPLES = SAMPLES_venom + SAMPLES_body
 
+def calcRSCU(cds_file):
 
+    codonDict = {'Ala': {'GCT': {}, 'GCC': {}, 'GCA': {}, 'GCG': {}},
+                 'Arg': {'CGT': {}, 'CGC': {}, 'CGA': {}, 'CGG': {}, 'AGA': {}, 'AGG': {}},
+                 'Asn': {'AAT': {}, 'AAC': {}},
+                 'Asp': {'GAT': {}, 'GAC': {}},
+                 'Cys': {'TGT': {}, 'TGC': {}},
+                 'Gln': {'CAA': {}, 'CAG': {}},
+                 'Glu': {'GAA': {}, 'GAG': {}},
+                 'Gly': {'GGT': {}, 'GGC': {}, 'GGA': {}, 'GGG': {}},
+                 'His': {'CAT': {}, 'CAC': {}},
+                 'Ile': {'ATT': {}, 'ATC': {}, 'ATA': {}},
+                 'Leu': {'TTA': {}, 'TTG': {}, 'CTT': {}, 'CTC': {}, 'CTA': {}, 'CTG': {}},
+                 'Lys': {'AAA': {}, 'AAG': {}},
+                 'Phe': {'TTT': {}, 'TTC': {}},
+                 'Pro': {'CCT': {}, 'CCC': {}, 'CCA': {}, 'CCG': {}},
+                 'Ser': {'TCA': {}, 'TCT': {}, 'TCC': {}, 'TCG': {}, 'AGT': {}, 'AGC': {}},
+                 'Thr': {'ACT': {}, 'ACC': {}, 'ACA': {}, 'ACG': {}},
+                 'Stop': {'TAA': {}, 'TAG': {}, 'TGA': {}},
+                 'Val': {'GTA': {}, 'GTT': {}, 'GTC':{}, 'GTG': {}},
+                 'Tyr': {'TAT': {}, 'TAC': {}}
+                }
+
+
+    for record in SeqIO.parse(file, "fasta"):
+        header, seq = record.description,str(record.seq)
+        # filter by longest isoform, somehow
+        n = 3
+        codons = [seq[i:i+n] for i in range(0, len(seq), n)]
+
+        print(header)
+        print(codons)
+        for aa in codonDict:
+            print(aa)
+            aa_codonCount = len(codonDict[aa])
+            sum_redundantCodons = sum([codons.count(codon) for codon in codonDict[aa] ])
+            for codon in codonDict[aa]:
+                observed_codonCount = codons.count(codon)
+
+                if ((1/aa_codonCount)*sum_redundantCodons) != 0:
+                    rscu = observed_codonCount / ((1/aa_codonCount)*sum_redundantCodons)
+                else:
+                    rscu = 0
+
+                # try:
+                #     rscu = observed_codonCount / ((1/aa_codonCount)*sum_redundantCodons)
+                # except:
+                #     rscu = 0
+
+                print(codon,rscu)
+                codonDict[aa][codon][header] = rscu
+
+    return codonDict
 print(SAMPLES)
 rule final:
     input:
@@ -67,7 +119,7 @@ rule transdecoder:
     input:
         "{sample}_trinity/Trinity.fasta"
     output:
-        "{sample}_trinity/Trinity.fasta.TransDecoder_dir"
+        "{sample}_trinity/Trinity.fasta.TransDecoder.cds"
     conda:
         "envs/transdecoder.yaml"
     shell:
@@ -84,6 +136,7 @@ rule supertranscript:
         "envs/trinity.yaml"
     shell:
         "supertranscript -i {input} "
+
 rule salmon:
     input:
         supertranscript = "{sample}_supertranscript.fasta"
@@ -98,3 +151,19 @@ rule salmon:
         salmon index {input.supertranscript}
         salmon quant {input.banana1}{input.banana2}
         """
+
+rule rscu:
+    input:
+        quant = "{sample}_quant.sf",
+        cds = "{sample}_trinity/Trinity.fasta.TransDecoder.cds"
+    output:
+        "{sample}.rscu.csv"
+    run:
+        rscu_dict = calcRSCU([input.cds])
+        rscu_panda = pd.DataFrame.from_dict({(i,j): user_dict[i][j]
+                           for i in user_dict.keys()
+                           for j in user_dict[i].keys()})
+
+        # get quant file, split into top and bottom 5 percent. Write to file
+        # columns will be (header,aa,codon,rscu, high/low)
+        
