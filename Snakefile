@@ -166,4 +166,9 @@ rule rscu:
 
         # get quant file, split into top and bottom 5 percent. Write to file
         # columns will be (header,aa,codon,rscu, high/low)
+        # Sort tpm values from highest to lowest, 
+        # then count total number of tpm values, 
+        # set n = total number of tpm values * 0.05, 
+        # Top5% = first n values, low5% = last n values 
+
         
