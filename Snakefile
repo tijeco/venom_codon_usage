@@ -102,6 +102,7 @@ rule banana:
                         out.write("@banana"+str(number)+"/2\n") #out.write(line)
                     number+=1
 
+# venom / body needed
 rule trinity:
     input:
         banana1 = "{sample}_1.processed_banana.fq",
@@ -114,7 +115,7 @@ rule trinity:
     shell:
         "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output {output.trinity_dir}"
 
-
+# this will also be venom and body combined
 rule transdecoder:
     input:
         "{sample}_trinity/Trinity.fasta"
@@ -127,6 +128,8 @@ rule transdecoder:
         TransDecoder.LongOrfs -t {input}  -m 30
         TransDecoder.Predict -t {input} --single_best_orf
         """
+
+# this will also be venom and body combined
 rule supertranscript:
     input:
         "{sample}_trinity/Trinity.fasta.TransDecoder_dir"
@@ -137,6 +140,8 @@ rule supertranscript:
     shell:
         "supertranscript -i {input} "
 
+# body / venom doesn't matter
+# map venom reads to combined, and map body reads to combined
 rule salmon:
     input:
         supertranscript = "{sample}_supertranscript.fasta"
@@ -167,9 +172,7 @@ rule rscu:
         # get quant file, split into top and bottom 5 percent. Write to file
 
         # columns will be (header,aa,codon,rscu, high/low)
-        # Sort tpm values from highest to lowest, 
-        # then count total number of tpm values, 
-        # set n = total number of tpm values * 0.05, 
-        # Top5% = first n values, low5% = last n values 
-
-        
+        # Sort tpm values from highest to lowest,
+        # then count total number of tpm values,
+        # set n = total number of tpm values * 0.05,
+        # Top5% = first n values, low5% = last n values
