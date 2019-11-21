@@ -155,7 +155,7 @@ rule salmon:
 rule rscu:
     input:
         quant = "{sample}_quant.sf",
-        cds = "{sample}_trinity/Trinity.fasta.TransDecoder.cds"
+        cds = "{sample}_trinity/Trinity.fasta.TransDecoder.cds" # just body
     output:
         "{sample}.rscu.csv"
     run:
@@ -165,5 +165,5 @@ rule rscu:
                            for j in user_dict[i].keys()})
 
         # get quant file, split into top and bottom 5 percent. Write to file
+
         # columns will be (header,aa,codon,rscu, high/low)
-        
