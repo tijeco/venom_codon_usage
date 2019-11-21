@@ -1,4 +1,5 @@
 SAMPLES, = glob_wildcards("{sample}_1.fq")  # read in file list
+#TISSUE =  stuff
 
 print(SAMPLES)
 rule final:
