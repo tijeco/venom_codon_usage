@@ -111,11 +111,11 @@ rule trinity:
         banana1 = "{sample}_1.processed_banana.fq",
         banana2 = "{sample}_2.processed_banana.fq"
     output:
-        "{sample}_trinity/"
+        "{sample}_trinity/Trinity.fasta"
     conda:
         "envs/trinity.yaml"
     shell:
-        "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output {output.trinity_dir}"
+        "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output  $(dirname {output} )"
         # "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output.trinity_fasta}"
 # this will also be venom and body combined
 rule transdecoder:
