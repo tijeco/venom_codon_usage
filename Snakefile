@@ -62,7 +62,7 @@ SAMPLES = SAMPLES_venom + SAMPLES_body
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_trinity/Trinity.fastaq", sample = SAMPLES)
+        expand("{sample}_trinity/Trinity.fasta", sample = SAMPLES)
 
 rule fastp:
     input:
