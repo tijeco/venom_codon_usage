@@ -1,8 +1,4 @@
 
-SAMPLES_venom, = glob_wildcards("{sample}_venom_1.fq")  # read in file list
-SAMPLES_body, = glob_wildcards("{sample}_body_1.fq")  # read in file list
-SAMPLES = SAMPLES_venom + SAMPLES_body
-
 def calcRSCU(cds_file):
 
     codonDict = {'Ala': {'GCT': {}, 'GCC': {}, 'GCA': {}, 'GCG': {}},
@@ -56,10 +52,17 @@ def calcRSCU(cds_file):
                 codonDict[aa][codon][header] = rscu
 
     return codonDict
+
+
+SAMPLES_venom, = glob_wildcards("{sample}_venom_1.fq")  # read in file list
+SAMPLES_body, = glob_wildcards("{sample}_body_1.fq")  # read in file list
+SAMPLES = SAMPLES_venom + SAMPLES_body
+
+
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_trinity", sample = SAMPLES)
+        expand("{sample}_trinity/Trinity.fasta", sample = SAMPLES)
 
 rule fastp:
     input:
@@ -105,15 +108,18 @@ rule banana:
 # venom / body needed
 rule trinity:
     input:
-        banana1 = "{sample}_1.processed_banana.fq",
-        banana2 = "{sample}_2.processed_banana.fq"
+        body_banana1 = expand("{sample}_1.processed_banana.fq", sample = SAMPLES_body),
+        body_banana2 = expand("{sample}_2.processed_banana.fq", sample = SAMPLES_body),
+        venom_banana1 = expand("{sample}_1.processed_banana.fq", sample = SAMPLES_venom),
+        venom_banana2 = expand("{sample}_2.processed_banana.fq", sample = SAMPLES_venom)
     output:
         trinity_dir = "{sample}_trinity",
         trinity_fasta = "{sample}_trinity/Trinity.fasta"
     conda:
         "envs/trinity.yaml"
     shell:
-        "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output {output.trinity_dir}"
+        "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output.trinity_fasta}"
+        # "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output {output.trinity_dir}"
 
 # this will also be venom and body combined
 rule transdecoder:
