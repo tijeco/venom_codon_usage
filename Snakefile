@@ -56,7 +56,7 @@ def calcRSCU(cds_file):
 
 SAMPLES_venom, = glob_wildcards("{sample}_venom_1.fq")  # read in file list
 SAMPLES_body, = glob_wildcards("{sample}_body_1.fq")  # read in file list
-SAMPLES, = glob_wildcards("{sample}_1.fq")
+SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 
 
 print(SAMPLES)
@@ -66,11 +66,11 @@ rule final:
 
 rule fastp:
     input:
-        raw1 = "{sample}_1.fq",
-        raw2 = "{sample}_2.fq"
+        raw1 = expand("{sample}_{tissue}_1.fq", sample = SAMPLES, tissue = ["body","venom"]),
+        raw2 = expand("{sample}_{tissue}_2.fq", sample = SAMPLES, tissue = ["body","venom"])
     output:
-        p1 = "{sample}_1.processed.fq",
-        p2 = "{sample}_2.processed.fq"
+        p1 = "{sample}_{tissue}_1.processed.fq",
+        p2 = "{sample}_{tissue}_2.processed.fq"
     conda:
         "envs/fastp.yaml"
     shell:
@@ -78,11 +78,11 @@ rule fastp:
 
 rule banana:
     input:
-        p1 = "{sample}_1.processed.fq",
-        p2 = "{sample}_2.processed.fq"
+        p1 = "{sample}_{tissue}_1.processed.fq",
+        p2 = "{sample}_{tissue}_2.processed.fq"
     output:
-        banana1 = "{sample}_1.processed_banana.fq",
-        banana2 = "{sample}_2.processed_banana.fq"
+        banana1 = "{sample}_{tissue}_1.processed_banana.fq",
+        banana2 = "{sample}_{tissue}_2.processed_banana.fq"
     run:
         with open(output.banana1,"w") as out:
             number = 0
@@ -108,15 +108,20 @@ rule banana:
 # venom / body needed
 rule trinity:
     input:
-        banana1 = "{sample}_1.processed_banana.fq",
-        banana2 = "{sample}_2.processed_banana.fq"
+        body_banana1 = "{sample}_body_1.processed_banana.fq",
+        body_banana2 = "{sample}_body_2.processed_banana.fq",
+        venom_banana1 = "{sample}_venom_1.processed_banana.fq",
+        venom_banana2 = "{sample}_venom_2.processed_banana.fq"
+
+
     output:
         "{sample}_trinity/Trinity.fasta"
     conda:
         "envs/trinity.yaml"
     shell:
-        "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output  $(dirname {output} )"
-        # "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output.trinity_fasta}"
+        "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output.trinity_fasta}"
+        # "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output  $(dirname {output} )"
+        "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output.trinity_fasta}"
 # this will also be venom and body combined
 rule transdecoder:
     input:
