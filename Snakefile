@@ -66,8 +66,8 @@ rule final:
 
 rule fastp:
     input:
-        raw1 = expand("{sample}_{tissue}_1.fq", sample = SAMPLES, tissue = ["body","venom"]),
-        raw2 = expand("{sample}_{tissue}_2.fq", sample = SAMPLES, tissue = ["body","venom"])
+        raw1 = "{sample}_{tissue}_1.fq",
+        raw2 = "{sample}_{tissue}_2.fq"
     output:
         p1 = "{sample}_{tissue}_1.processed.fq",
         p2 = "{sample}_{tissue}_2.processed.fq"
