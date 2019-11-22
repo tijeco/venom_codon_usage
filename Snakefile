@@ -62,7 +62,7 @@ SAMPLES = SAMPLES_venom + SAMPLES_body
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_trinity/Trinity.fasta", sample = SAMPLES)
+        expand("{sample}_trinity/Trinity.fastaq", sample = SAMPLES)
 
 rule fastp:
     input:
@@ -150,8 +150,8 @@ rule supertranscript:
 # map venom reads to combined, and map body reads to combined
 rule salmon:
     input:
-        supertranscript = "{sample}_supertranscript.fasta"
-        banana1 = "{sample}_1.processed_banana.fq"
+        supertranscript = "{sample}_supertranscript.fasta",
+        banana1 = "{sample}_1.processed_banana.fq",
         banana2 = "{sample}_2.processed_banana.fq"
     output:
         "{sample}_quant.sf"
