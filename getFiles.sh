@@ -26,8 +26,8 @@ mv SRR5185499_2.fastq Machimus_arthriticus_body_2.fq
 fastq-dump --defline-seq '@$sn[_$rn]/$ri' --split-files SRR2592960
 fastq-dump --defline-seq '@$sn[_$rn]/$ri' --split-files SRR3061379
 fastq-dump --defline-seq '@$sn[_$rn]/$ri' --split-files SRR3984663
-cat SRR2592960_1.fastq SRR3061379_1.fastq SRR3984663_1.fastq > Mesobuthus_Martensii_venom_1.fq
-cat SRR2592960_2.fastq SRR3061379_2.fastq SRR3984663_2.fastq > Mesobuthus_Martensii_venom_2.fq
+cat SRR2592960_1.fastq SRR3061379_1.fastq SRR3984663_1.fastq > Mesobuthus_martensii_venom_1.fq
+cat SRR2592960_2.fastq SRR3061379_2.fastq SRR3984663_2.fastq > Mesobuthus_martensii_venom_2.fq
 
 
 
@@ -40,17 +40,17 @@ cat SRR3984597_2.fastq SRR2592319_2.fastq SRR3056832_2.fastq > Mesobuthus_marten
 
 
 fastq-dump --defline-seq '@$sn[_$rn]/$ri' --split-files SRR5285122
-mv SRR5285122_1.fastq Latrodectus_Hesperus_venom_1.fq
-mv SRR5285122_2.fastq Latrodectus_Hesperus_venom_2.fq
+mv SRR5285122_1.fastq Latrodectus_hesperus_venom_1.fq
+mv SRR5285122_2.fastq Latrodectus_hesperus_venom_2.fq
 
 fastq-dump --defline-seq '@$sn[_$rn]/$ri' --split-files SRR5285105
-mv SRR5285105_1.fastq Latrodectus_Hesperus_body_1.fq
-mv SRR5285105_2.fastq Latrodectus_Hesperus_body_2.fq
+mv SRR5285105_1.fastq Latrodectus_hesperus_body_1.fq
+mv SRR5285105_2.fastq Latrodectus_hesperus_body_2.fq
 
 fastq-dump --defline-seq '@$sn[_$rn]/$ri' --split-files SRR5285141
-mv SRR5285141_1.fastq Steatoda_Grossa_venom_1.fq
-mv SRR5285141_2.fastq Steatoda_Grossa_venom_2.fq
+mv SRR5285141_1.fastq Steatoda_grossa_venom_1.fq
+mv SRR5285141_2.fastq Steatoda_grossa_venom_2.fq
 
 fastq-dump --defline-seq '@$sn[_$rn]/$ri' --split-files SRR5285126
-mv SRR5285126_1.fastq Steatoda_Grossa_body_1.fq
-mv SRR5285126_2.fastq Steatoda_Grossa_body_2.fq
+mv SRR5285126_1.fastq Steatoda_grossa_body_1.fq
+mv SRR5285126_2.fastq Steatoda_grossa_body_2.fq
