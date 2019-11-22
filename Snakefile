@@ -108,19 +108,16 @@ rule banana:
 # venom / body needed
 rule trinity:
     input:
-        body_banana1 = expand("{body_sample}_1.processed_banana.fq", body_sample = SAMPLES_body),
-        body_banana2 = expand("{body_sample}_2.processed_banana.fq", body_sample = SAMPLES_body),
-        venom_banana1 = expand("{venom_sample}_1.processed_banana.fq", venom_sample = SAMPLES_venom),
-        venom_banana2 = expand("{venom_sample}_2.processed_banana.fq", venom_sample = SAMPLES_venom)
+        banana1 = "{sample}_1.processed_banana.fq",
+        banana2 = "{sample}_2.processed_banana.fq"
     output:
         trinity_dir = "{sample}_trinity",
         trinity_fasta = "{sample}_trinity/Trinity.fasta"
     conda:
         "envs/trinity.yaml"
     shell:
-        "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output.trinity_fasta}"
-        # "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output {output.trinity_dir}"
-
+        "Trinity --seqType fq --max_memory 150G  --left {input.banana1} --right {input.banana2} --CPU 20 --full_cleanup --output {output.trinity_dir}"
+        # "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output.trinity_fasta}"
 # this will also be venom and body combined
 rule transdecoder:
     input:
