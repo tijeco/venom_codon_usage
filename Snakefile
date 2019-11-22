@@ -56,7 +56,7 @@ def calcRSCU(cds_file):
 
 SAMPLES_venom, = glob_wildcards("{sample}_venom_1.fq")  # read in file list
 SAMPLES_body, = glob_wildcards("{sample}_body_1.fq")  # read in file list
-SAMPLES = SAMPLES_venom + SAMPLES_body
+SAMPLES, = glob_wildcards("{sample}_1.fq")
 
 
 print(SAMPLES)
