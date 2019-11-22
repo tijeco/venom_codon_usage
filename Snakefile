@@ -111,8 +111,7 @@ rule trinity:
         banana1 = "{sample}_1.processed_banana.fq",
         banana2 = "{sample}_2.processed_banana.fq"
     output:
-        trinity_dir = "{sample}_trinity",
-        trinity_fasta = "{sample}_trinity/Trinity.fasta"
+        "{sample}_trinity/"
     conda:
         "envs/trinity.yaml"
     shell:
