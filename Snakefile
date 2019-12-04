@@ -116,6 +116,7 @@ rule trinity:
         "{sample}_trinity/Trinity.fasta"
     conda:
         "envs/trinity.yaml"
+    threads: 64
     shell:
         "Trinity --seqType fq --max_memory 150G  --left {input.venom_banana1},{input.body_banana1} --right {input.venom_banana2},{input.body_banana2} --CPU {threads} --full_cleanup --output  $(dirname {output} )"
         # "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output}"
