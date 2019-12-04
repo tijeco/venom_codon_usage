@@ -117,7 +117,7 @@ rule trinity:
     conda:
         "envs/trinity.yaml"
     shell:
-        "Trinity --seqType fq --max_memory 150G  --left {input.venom_banana1},{input.body_banana1} --right {input.venom_banana2},{input.body_banana2} --CPU 20 --full_cleanup --output  $(dirname {output} )"
+        "Trinity --seqType fq --max_memory 150G  --left {input.venom_banana1},{input.body_banana1} --right {input.venom_banana2},{input.body_banana2} --CPU {threads} --full_cleanup --output  $(dirname {output} )"
         # "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output}"
         # "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output}"
 # this will also be venom and body combined
