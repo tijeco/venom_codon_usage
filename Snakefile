@@ -62,7 +62,7 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_trinity/Trinity.fasta", sample = SAMPLES)
+        expand("{sample}_trinity.Trinity.fasta", sample = SAMPLES)
 
 rule fastp:
     input:
@@ -113,7 +113,7 @@ rule trinity:
         venom_banana1 = "{sample}_venom_1.processed_banana.fq",
         venom_banana2 = "{sample}_venom_2.processed_banana.fq"
     output:
-        "{sample}_trinity/Trinity.fasta"
+        "{sample}_trinity.Trinity.fasta"
     conda:
         "envs/trinity.yaml"
     threads: 64
@@ -124,9 +124,9 @@ rule trinity:
 # this will also be venom and body combined
 rule transdecoder:
     input:
-        "{sample}_trinity/Trinity.fasta"
+        "{sample}_trinity.Trinity.fasta"
     output:
-        "{sample}_trinity/Trinity.fasta.TransDecoder.cds"
+        "{sample}_trinity.Trinity.fasta.TransDecoder.cds"
     conda:
         "envs/transdecoder.yaml"
     shell:
@@ -138,7 +138,7 @@ rule transdecoder:
 # this will also be venom and body combined
 rule supertranscript:
     input:
-        "{sample}_trinity/Trinity.fasta.TransDecoder_dir"
+        "{sample}_trinity.Trinity.fasta.TransDecoder_dir"
     output:
         "{sample}_supertranscript.fasta"
     conda:
@@ -166,7 +166,7 @@ rule salmon:
 rule rscu:
     input:
         quant = "{sample}_quant.sf",
-        cds = "{sample}_trinity/Trinity.fasta.TransDecoder.cds" # just body
+        cds = "{sample}_trinity.Trinity.fasta.TransDecoder.cds" # just body
     output:
         "{sample}.rscu.csv"
     run:
