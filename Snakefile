@@ -113,7 +113,7 @@ rule trinity:
         venom_banana1 = "{sample}_venom_1.processed_banana.fq",
         venom_banana2 = "{sample}_venom_2.processed_banana.fq"
     output:
-        fasta = "{sample}_trinity.Trinity.fasta"
+        fasta = "{sample}_trinity.Trinity.fasta",
         dir = "{sample}_trinity"
     conda:
         "envs/trinity.yaml"
