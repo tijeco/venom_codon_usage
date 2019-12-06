@@ -113,12 +113,13 @@ rule trinity:
         venom_banana1 = "{sample}_venom_1.processed_banana.fq",
         venom_banana2 = "{sample}_venom_2.processed_banana.fq"
     output:
-        "{sample}_trinity.Trinity.fasta"
+        fasta = "{sample}_trinity.Trinity.fasta"
+        dir = "{sample}_trinity"
     conda:
         "envs/trinity.yaml"
     threads: 64
     shell:
-        "Trinity --seqType fq --max_memory 150G  --left {input.venom_banana1},{input.body_banana1} --right {input.venom_banana2},{input.body_banana2} --CPU {threads} --full_cleanup --output  $(dirname {output} )"
+        "Trinity --seqType fq --max_memory 150G  --left {input.venom_banana1},{input.body_banana1} --right {input.venom_banana2},{input.body_banana2} --CPU {threads} --full_cleanup --output  {output.dir}"
         # "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output}"
         # "echo {input.body_banana1} {input.body_banana2} {input.venom_banana1} {input.venom_banana2} > {output}"
 # this will also be venom and body combined
