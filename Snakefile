@@ -62,7 +62,9 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_trinity.Trinity.fasta", sample = SAMPLES)
+        expand("{sample}_supertranscript.fasta", sample = SAMPLES)
+        # expand("{sample}_trinity.Trinity.fasta", sample = SAMPLES)
+
 
 rule fastp:
     input:
@@ -139,13 +141,13 @@ rule transdecoder:
 # this will also be venom and body combined
 rule supertranscript:
     input:
-        "{sample}_trinity.Trinity.fasta.TransDecoder_dir"
+        "{sample}_trinity.Trinity.fasta"
     output:
         "{sample}_supertranscript.fasta"
     conda:
         "envs/trinity.yaml"
     shell:
-        "supertranscript -i {input} "
+        "out={output};Trinity_gene_splice_modeler.py --trinity_fasta {input} --out_prefix ${{out%.fasta}}"
 
 # body / venom doesn't matter
 # map venom reads to combined, and map body reads to combined
