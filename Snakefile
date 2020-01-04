@@ -152,24 +152,52 @@ rule supertranscript:
 
 # body / venom doesn't matter
 # map venom reads to combined, and map body reads to combined
-rule salmon:
+rule salmon_venom_index:
     input:
-        supertranscript = "{sample}_supertranscript.fasta",
-        banana1 = "{sample}_1.processed_banana.fq",
-        banana2 = "{sample}_2.processed_banana.fq"
+        "{sample}_supertranscript.fasta"
     output:
-        "{sample}_quant.sf"
+        "{sample}_venom_index"
     conda:
         "envs/trinity.yaml"
     shell:
-        """
-        salmon index {input.supertranscript}
-        salmon quant {input.banana1} {input.banana2}
-        """
+        "salmon index -t {input} -i {output}"
+rule salmon_venom_quant:
+    input:
+        index = "{sample}_venom_index"
+        banana1 = "{sample}_venom_1.processed_banana.fq",
+        banana2 = "{sample}_venom_2.processed_banana.fq"
+    output:
+        "{sample}_venom_quant.sf"
+    conda:
+        "envs/trinity.yaml"
+    shell:
+        "salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o {output}"
+
+rule salmon_body_index:
+    input:
+        "{sample}_supertranscript.fasta"
+    output:
+        "{sample}_body_index"
+    conda:
+        "envs/trinity.yaml"
+    shell:
+        "salmon index -t {input} -i {output}"
+rule salmon_body_quant:
+    input:
+        index = "{sample}_body_index"
+        banana1 = "{sample}_body_1.processed_banana.fq",
+        banana2 = "{sample}_body_2.processed_banana.fq"
+    output:
+        "{sample}_body_quant.sf"
+    conda:
+        "envs/trinity.yaml"
+    shell:
+        "salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o {output}"
+
 
 rule rscu:
     input:
-        quant = "{sample}_quant.sf",
+        quant = "{sample}_body_quant.sf",
         cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds" # just body
     output:
         "{sample}.rscu.csv"
@@ -178,6 +206,8 @@ rule rscu:
         rscu_panda = pd.DataFrame.from_dict({(i,j): user_dict[i][j]
                            for i in user_dict.keys()
                            for j in user_dict[i].keys()})
+        with open([output],"w") as out:
+            out.write("temp")
 
         # get quant file, split into top and bottom 5 percent. Write to file
 
