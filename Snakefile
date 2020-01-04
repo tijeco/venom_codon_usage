@@ -153,18 +153,18 @@ rule supertranscript:
 
 # body / venom doesn't matter
 # map venom reads to combined, and map body reads to combined
-rule salmon_venom_index:
+rule salmon_index:
     input:
         "{sample}_supertranscript.fasta"
     output:
-        "{sample}_venom_index"
+        "{sample}_index"
     conda:
         "envs/trinity.yaml"
     shell:
         "salmon index -t {input} -i {output}"
 rule salmon_venom_quant:
     input:
-        index = "{sample}_venom_index",
+        index = "{sample}_index",
         banana1 = "{sample}_venom_1.processed_banana.fq",
         banana2 = "{sample}_venom_2.processed_banana.fq"
     output:
@@ -174,18 +174,9 @@ rule salmon_venom_quant:
     shell:
         "salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o {output}"
 
-rule salmon_body_index:
-    input:
-        "{sample}_supertranscript.fasta"
-    output:
-        "{sample}_body_index"
-    conda:
-        "envs/trinity.yaml"
-    shell:
-        "salmon index -t {input} -i {output}"
 rule salmon_body_quant:
     input:
-        index = "{sample}_body_index",
+        index = "{sample}_index",
         banana1 = "{sample}_body_1.processed_banana.fq",
         banana2 = "{sample}_body_2.processed_banana.fq"
     output:
