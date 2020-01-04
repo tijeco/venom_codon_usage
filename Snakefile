@@ -62,7 +62,7 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_trinity.Trinity.fasta.transDecoder.cds", sample = SAMPLES)
+        expand("{sample}_trinity.Trinity.fasta.transdecoder.cds", sample = SAMPLES)
         # expand("{sample}_supertranscript.fasta", sample = SAMPLES)
         # expand("{sample}_trinity.Trinity.fasta", sample = SAMPLES)
 
@@ -130,7 +130,7 @@ rule transdecoder:
     input:
         "{sample}_trinity.Trinity.fasta"
     output:
-        "{sample}_trinity.Trinity.fasta.transDecoder.cds"
+        "{sample}_trinity.Trinity.fasta.transdecoder.cds"
     conda:
         "envs/transdecoder.yaml"
     shell:
@@ -170,7 +170,7 @@ rule salmon:
 rule rscu:
     input:
         quant = "{sample}_quant.sf",
-        cds = "{sample}_trinity.Trinity.fasta.transDecoder.cds" # just body
+        cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds" # just body
     output:
         "{sample}.rscu.csv"
     run:
