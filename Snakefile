@@ -62,6 +62,7 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
+        expand("{sample}_trinity.Trinity.fasta.TransDecoder.cds", sample = SAMPLES)
         expand("{sample}_supertranscript.fasta", sample = SAMPLES)
         # expand("{sample}_trinity.Trinity.fasta", sample = SAMPLES)
 
@@ -163,7 +164,7 @@ rule salmon:
     shell:
         """
         salmon index {input.supertranscript}
-        salmon quant {input.banana1}{input.banana2}
+        salmon quant {input.banana1} {input.banana2}
         """
 
 rule rscu:
