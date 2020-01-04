@@ -136,7 +136,7 @@ rule transdecoder:
     shell:
         """
         TransDecoder.LongOrfs -t {input}  -m 30
-        TransDecoder.Predict -t {input} --single_best_orf
+        TransDecoder.Predict -t {input} --single_best_only
         """
 
 # this will also be venom and body combined
