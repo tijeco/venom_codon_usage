@@ -164,7 +164,7 @@ rule salmon_index:
         "salmon index -t {input} -i {output}"
 rule salmon_venom_quant:
     input:
-        index = "{sample}_index",
+        index = directory("{sample}_index"),
         banana1 = "{sample}_venom_1.processed_banana.fq",
         banana2 = "{sample}_venom_2.processed_banana.fq"
     output:
@@ -176,7 +176,7 @@ rule salmon_venom_quant:
 
 rule salmon_body_quant:
     input:
-        index = "{sample}_index",
+        index = directory("{sample}_index"),
         banana1 = "{sample}_body_1.processed_banana.fq",
         banana2 = "{sample}_body_2.processed_banana.fq"
     output:
