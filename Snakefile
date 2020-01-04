@@ -63,7 +63,7 @@ print(SAMPLES)
 rule final:
     input:
         expand("{sample}_trinity.Trinity.fasta.TransDecoder.cds", sample = SAMPLES)
-        expand("{sample}_supertranscript.fasta", sample = SAMPLES)
+        # expand("{sample}_supertranscript.fasta", sample = SAMPLES)
         # expand("{sample}_trinity.Trinity.fasta", sample = SAMPLES)
 
 
