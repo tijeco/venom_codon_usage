@@ -193,13 +193,14 @@ rule rscu:
         cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds" # just body
     output:
         "{sample}.rscu.csv"
-    run:
-        rscu_dict = calcRSCU([input.cds])
-        rscu_panda = pd.DataFrame.from_dict({(i,j): user_dict[i][j]
-                           for i in user_dict.keys()
-                           for j in user_dict[i].keys()})
-        with open([output],"w") as out:
-            out.write("temp")
+    shell: "touch {output}"
+    # run:
+    #     rscu_dict = calcRSCU([input.cds])
+    #     rscu_panda = pd.DataFrame.from_dict({(i,j): user_dict[i][j]
+    #                        for i in user_dict.keys()
+    #                        for j in user_dict[i].keys()})
+    #     with open([output],"w") as out:
+    #         out.write("temp")
 
         # get quant file, split into top and bottom 5 percent. Write to file
 
