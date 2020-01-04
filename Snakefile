@@ -62,7 +62,8 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_trinity.Trinity.fasta.transdecoder.cds", sample = SAMPLES)
+        expand("{sample}.rscu.csv", sample = SAMPLES)
+        # expand("{sample}_trinity.Trinity.fasta.transdecoder.cds", sample = SAMPLES)
         # expand("{sample}_supertranscript.fasta", sample = SAMPLES)
         # expand("{sample}_trinity.Trinity.fasta", sample = SAMPLES)
 
