@@ -157,7 +157,7 @@ rule salmon_index:
     input:
         "{sample}_supertranscript.fasta"
     output:
-        "{sample}_index"
+        directory("{sample}_index")
     conda:
         "envs/trinity.yaml"
     shell:
