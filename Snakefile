@@ -164,7 +164,7 @@ rule salmon_venom_index:
         "salmon index -t {input} -i {output}"
 rule salmon_venom_quant:
     input:
-        index = "{sample}_venom_index"
+        index = "{sample}_venom_index",
         banana1 = "{sample}_venom_1.processed_banana.fq",
         banana2 = "{sample}_venom_2.processed_banana.fq"
     output:
@@ -185,7 +185,7 @@ rule salmon_body_index:
         "salmon index -t {input} -i {output}"
 rule salmon_body_quant:
     input:
-        index = "{sample}_body_index"
+        index = "{sample}_body_index",
         banana1 = "{sample}_body_1.processed_banana.fq",
         banana2 = "{sample}_body_2.processed_banana.fq"
     output:
