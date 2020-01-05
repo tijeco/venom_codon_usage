@@ -199,7 +199,7 @@ rule rscu:
         rscu_panda = pd.DataFrame.from_dict({(i,j): rscu_dict[i][j]
                            for i in rscu_dict.keys()
                            for j in rscu_dict[i].keys()})
-        rscu_panda.to_csv([output],index=False)
+        rscu_panda.to_csv(output,index=False)
     #     with open([output],"w") as out:
     #         out.write("temp")
 
