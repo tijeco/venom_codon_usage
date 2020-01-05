@@ -200,15 +200,26 @@ rule rscu:
         "{sample}_body.rscu.csv"
     run:
         quant_file = input.quant + "/quant.sf"
+        quant_df  = pd.read_csv(quant_file, sep='\t', header=0)
+        quant_over2TPM = quant_df[quant_df["TPM"] > 2]
+        num_seqs = quant_over2TPM.sort_values("TPM").shape[0]
+        five_percent = round(quant_over2TPM.sort_values("TPM").shape[0] * 0.05)
+        bottom5 = quant_over2TPM.sort_values("TPM")[:five_percent]
+        top5 = quant_over2TPM.sort_values("TPM")[num_seqs-five_percent:]
+
         rscu_dict = calcRSCU(input.cds)
         with open(output[0],"w") as out:
-            out.write("header,aa,codon,rscu\n")
+            out.write("header,aa,codon,rscu,class\n")
             for aa in rscu_dict:
                 for codon in rscu_dict[aa]:
                     for header in rscu_dict[aa][codon]:
-                        out.write(header + "," + aa + "," + codon + "," + str(rscu_dict[aa][codon][header]) + "\n")
+                        if header in list(bottom5["Name"]):
+                            out.write(header + "," + aa + "," + codon + "," + str(rscu_dict[aa][codon][header]) + ",bottom_5percent\n")
+                        elif header in list(top5["Name"]):
+                            out.write(header + "," + aa + "," + codon + "," + str(rscu_dict[aa][codon][header]) + ",top_5percent\n")
 
 
+                            
         # rscu_panda = pd.DataFrame.from_dict({(i,j): rscu_dict[i][j]
         #                    for i in rscu_dict.keys()
         #                    for j in rscu_dict[i].keys()})
