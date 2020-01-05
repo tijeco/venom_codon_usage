@@ -33,7 +33,7 @@ def calcRSCU(cds_file):
             elif len(seq) > len(isoform_dict[gene][1]):
                 isoform_dict[gene] = (header,seq)
     for gene in isoform_dict:
-        print(isoform_dict[gene][0])
+        # print(isoform_dict[gene][0])
         header = gene
         seq = isoform_dict[gene][1]
             # filter by longest isoform, somehow
@@ -67,7 +67,7 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}.rscu.csv", sample = SAMPLES)
+        expand("{sample}_body.rscu.csv", sample = SAMPLES)
         # expand("{sample}_trinity.Trinity.fasta.transdecoder.cds", sample = SAMPLES)
         # expand("{sample}_supertranscript.fasta", sample = SAMPLES)
         # expand("{sample}_trinity.Trinity.fasta", sample = SAMPLES)
@@ -197,8 +197,9 @@ rule rscu:
         quant = "{sample}_body_quant.sf",
         cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds" # just body
     output:
-        "{sample}.rscu.csv"
+        "{sample}_body.rscu.csv"
     run:
+        quant_file = input.quant + "/quant.sf"
         rscu_dict = calcRSCU(input.cds)
         rscu_panda = pd.DataFrame.from_dict({(i,j): rscu_dict[i][j]
                            for i in rscu_dict.keys()
