@@ -202,7 +202,7 @@ rule rscu:
         quant_file = input.quant + "/quant.sf"
         rscu_dict = calcRSCU(input.cds)
         with open(output[0],"w") as out:
-            out.write("header,aa,codon,rscu\n"
+            out.write("header,aa,codon,rscu\n")
             for aa in rscu_dict:
                 for codon in rscu_dict[aa]:
                     for header in rscu_dict[aa][codon]:
