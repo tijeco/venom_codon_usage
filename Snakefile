@@ -193,6 +193,8 @@ rule rscu:
         cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds" # just body
     output:
         "{sample}.rscu.csv"
+    conda:
+        "envs/rscu.yaml"
     run:
         rscu_dict = calcRSCU([input.cds])
         rscu_panda = pd.DataFrame.from_dict({(i,j): user_dict[i][j]
