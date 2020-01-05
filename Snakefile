@@ -194,12 +194,12 @@ rule salmon_body_quant:
 
 rule rscu:
     input:
-        quant = "{sample}_body_quant.sf",
+        quant = "{sample}_body_quant/quant.sf",
         cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds" # just body
     output:
         "{sample}_body.rscu.csv"
     run:
-        quant_file = input.quant + "/quant.sf"
+        quant_file = input.quant
         quant_df  = pd.read_csv(quant_file, sep='\t', header=0)
         quant_over2TPM = quant_df[quant_df["TPM"] > 2]
         num_seqs = quant_over2TPM.sort_values("TPM").shape[0]
