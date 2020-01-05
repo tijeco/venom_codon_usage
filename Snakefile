@@ -33,6 +33,7 @@ def calcRSCU(cds_file):
             elif len(seq) > len(isoform_dict[gene][1]):
                 isoform_dict[gene] = (header,seq)
     for gene in isoform_dict:
+        print(isoform_dict[gene][0])
         header = gene
         seq = isoform_dict[gene][1]
             # filter by longest isoform, somehow
