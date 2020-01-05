@@ -165,7 +165,7 @@ rule salmon_index:
         "salmon index -t {input} -i {output}"
 rule salmon_venom_quant:
     input:
-        index = directory("{sample}_index"),
+        index = "{sample}_index",
         banana1 = "{sample}_venom_1.processed_banana.fq",
         banana2 = "{sample}_venom_2.processed_banana.fq"
     output:
@@ -177,7 +177,7 @@ rule salmon_venom_quant:
 
 rule salmon_body_quant:
     input:
-        index = directory("{sample}_index"),
+        index = "{sample}_index",
         banana1 = "{sample}_body_1.processed_banana.fq",
         banana2 = "{sample}_body_2.processed_banana.fq"
     output:
@@ -199,7 +199,7 @@ rule rscu:
         rscu_panda = pd.DataFrame.from_dict({(i,j): rscu_dict[i][j]
                            for i in rscu_dict.keys()
                            for j in rscu_dict[i].keys()})
-        rscu_panda.to_csv(output,index=False)
+        rscu_panda.to_csv(output[0],index=False)
     #     with open([output],"w") as out:
     #         out.write("temp")
 
