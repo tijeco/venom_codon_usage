@@ -201,10 +201,18 @@ rule rscu:
     run:
         quant_file = input.quant + "/quant.sf"
         rscu_dict = calcRSCU(input.cds)
-        rscu_panda = pd.DataFrame.from_dict({(i,j): rscu_dict[i][j]
-                           for i in rscu_dict.keys()
-                           for j in rscu_dict[i].keys()})
-        rscu_panda.to_csv(output[0])
+        with open(output[0],"w") as out:
+            out.write("header,aa,codon,rscu\n"
+            for aa in rscu_dict:
+                for codon in rscu_dict[aa]:
+                    for header in rscu_dict[aa][codon]:
+                        out.write(header + "," + aa + "," + codon + "," + str(rscu_dict[aa][codon][header]) + "\n")
+
+
+        # rscu_panda = pd.DataFrame.from_dict({(i,j): rscu_dict[i][j]
+        #                    for i in rscu_dict.keys()
+        #                    for j in rscu_dict[i].keys()})
+        # rscu_panda.to_csv(output[0])
     #     with open([output],"w") as out:
     #         out.write("temp")
 
