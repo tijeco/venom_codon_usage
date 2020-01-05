@@ -1,4 +1,5 @@
-from Bio.Seq import Seq
+from Bio.Seq import SeqIO
+import pandas as pd
 def calcRSCU(cds_file):
 
     codonDict = {'Ala': {'GCT': {}, 'GCC': {}, 'GCA': {}, 'GCG': {}},
