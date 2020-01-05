@@ -1,4 +1,4 @@
-from Bio.Seq import SeqIO
+from Bio import SeqIO
 import pandas as pd
 def calcRSCU(cds_file):
 
