@@ -23,10 +23,19 @@ def calcRSCU(cds_file):
                  'Tyr': {'TAT': {}, 'TAC': {}}
                 }
 
-
+    isoform_dict = {}
     for record in SeqIO.parse(cds_file, "fasta"):
-        header, seq = record.description,str(record.seq)
-        # filter by longest isoform, somehow
+        if "complete" in header:
+            header, seq = record.description,str(record.seq)
+            gene = header.split("_i")[0]
+            if gene not in isoform_dict:
+                isoform_dict[gene] = (header,seq)
+            elif len(seq) > len(isoform_dict[gene][1]):
+                isoform_dict[gene] = (header,seq)
+    for gene in isoform_dict:
+        header = gene
+        seq = isoform_dict[gene][1]
+            # filter by longest isoform, somehow
         n = 3
         codons = [seq[i:i+n] for i in range(0, len(seq), n)]
 
@@ -44,12 +53,6 @@ def calcRSCU(cds_file):
                 else:
                     rscu = 0
 
-                # try:
-                #     rscu = observed_codonCount / ((1/aa_codonCount)*sum_redundantCodons)
-                # except:
-                #     rscu = 0
-
-                # print(codon,rscu)
                 codonDict[aa][codon][header] = rscu
 
     return codonDict
