@@ -177,7 +177,7 @@ rule salmon_venom_quant:
     conda:
         "envs/trinity.yaml"
     shell:
-        "out={output};salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o {output} ${{out%quant.sf}}"
+        "out={output};salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o ${{out%quant.sf}}"
 
 rule salmon_body_quant:
     input:
@@ -189,7 +189,7 @@ rule salmon_body_quant:
     conda:
         "envs/trinity.yaml"
     shell:
-        "out={output};salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o {output} ${{out%quant.sf}}"
+        "out={output};salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o ${{out%quant.sf}}"
 
 
 rule rscu:
