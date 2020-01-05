@@ -24,7 +24,7 @@ def calcRSCU(cds_file):
                 }
 
 
-    for record in SeqIO.parse(file, "fasta"):
+    for record in SeqIO.parse(cds_file, "fasta"):
         header, seq = record.description,str(record.seq)
         # filter by longest isoform, somehow
         n = 3
