@@ -173,11 +173,11 @@ rule salmon_venom_quant:
         banana1 = "{sample}_venom_1.processed_banana.fq",
         banana2 = "{sample}_venom_2.processed_banana.fq"
     output:
-        "{sample}_venom_quant.sf"
+        "{sample}_venom_quant/quant.sf"
     conda:
         "envs/trinity.yaml"
     shell:
-        "salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o {output}"
+        "out={output};salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o {output} ${{out%quant.sf}}"
 
 rule salmon_body_quant:
     input:
@@ -185,11 +185,11 @@ rule salmon_body_quant:
         banana1 = "{sample}_body_1.processed_banana.fq",
         banana2 = "{sample}_body_2.processed_banana.fq"
     output:
-        "{sample}_body_quant.sf"
+        "{sample}_body_quant/quant.sf"
     conda:
         "envs/trinity.yaml"
     shell:
-        "salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o {output}"
+        "out={output};salmon quant -i {input.index} -l A -1 {input.banana1} -2 {input.banana2} -o {output} ${{out%quant.sf}}"
 
 
 rule rscu:
@@ -199,7 +199,7 @@ rule rscu:
     output:
         "{sample}_body.rscu.csv"
     run:
-        quant_file = input.quant[0] + "/quant.sf"
+        quant_file = input.quant + "/quant.sf"
         quant_df  = pd.read_csv(quant_file, sep='\t', header=0)
         quant_over2TPM = quant_df[quant_df["TPM"] > 2]
         num_seqs = quant_over2TPM.sort_values("TPM").shape[0]
