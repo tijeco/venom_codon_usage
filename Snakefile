@@ -25,8 +25,8 @@ def calcRSCU(cds_file):
 
     isoform_dict = {}
     for record in SeqIO.parse(cds_file, "fasta"):
+        header, seq = record.description,str(record.seq)
         if "complete" in header:
-            header, seq = record.description,str(record.seq)
             gene = header.split("_i")[0]
             if gene not in isoform_dict:
                 isoform_dict[gene] = (header,seq)
