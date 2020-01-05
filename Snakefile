@@ -49,7 +49,7 @@ def calcRSCU(cds_file):
                 # except:
                 #     rscu = 0
 
-                print(codon,rscu)
+                # print(codon,rscu)
                 codonDict[aa][codon][header] = rscu
 
     return codonDict
