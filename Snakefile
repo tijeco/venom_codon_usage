@@ -193,12 +193,12 @@ rule rscu:
         cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds" # just body
     output:
         "{sample}.rscu.csv"
-    shell: "touch {output}"
-    # run:
-    #     rscu_dict = calcRSCU([input.cds])
-    #     rscu_panda = pd.DataFrame.from_dict({(i,j): user_dict[i][j]
-    #                        for i in user_dict.keys()
-    #                        for j in user_dict[i].keys()})
+    run:
+        rscu_dict = calcRSCU([input.cds])
+        rscu_panda = pd.DataFrame.from_dict({(i,j): user_dict[i][j]
+                           for i in user_dict.keys()
+                           for j in user_dict[i].keys()})
+        rscu_panda.to_csv([output],index=False)
     #     with open([output],"w") as out:
     #         out.write("temp")
 
