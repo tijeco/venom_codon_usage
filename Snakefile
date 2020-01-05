@@ -30,10 +30,10 @@ def calcRSCU(cds_file):
         n = 3
         codons = [seq[i:i+n] for i in range(0, len(seq), n)]
 
-        print(header)
-        print(codons)
+        # print(header)
+        # print(codons)
         for aa in codonDict:
-            print(aa)
+            # print(aa)
             aa_codonCount = len(codonDict[aa])
             sum_redundantCodons = sum([codons.count(codon) for codon in codonDict[aa] ])
             for codon in codonDict[aa]:
