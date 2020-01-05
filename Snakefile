@@ -195,7 +195,7 @@ rule rscu:
     output:
         "{sample}.rscu.csv"
     run:
-        rscu_dict = calcRSCU([input.cds])
+        rscu_dict = calcRSCU(input.cds)
         rscu_panda = pd.DataFrame.from_dict({(i,j): rscu_dict[i][j]
                            for i in rscu_dict.keys()
                            for j in rscu_dict[i].keys()})
