@@ -218,6 +218,20 @@ rule rscu:
                         elif header in list(top5["Name"]):
                             out.write(header + "," + aa + "," + codon + "," + str(rscu_dict[aa][codon][header]) + ",top_5percent\n")
 
+rule optimal_codon:
+    input:
+        script = "src/rscu.R"
+        rscu = "{sample}_body.rscu.csv"
+    output:
+        deltaRSCU = "{sample}_body.deltaRSCU.csv",
+        optimalCodon = "{sample}_body.optimalCodon.csv",
+        optimalCodonFig = "{sample}_body.optimalCodon.png"
+    conda:
+        "envs/r.yaml"
+    shell:
+        "Rscript {input.script} -d {input.rscu} -r {output.deltaRSCU} -o {output.optimalCodon} -f {optimalCodonFig}"
+
+
 
 
         # rscu_panda = pd.DataFrame.from_dict({(i,j): rscu_dict[i][j]
