@@ -230,7 +230,7 @@ rule optimal_codon:
     conda:
         "envs/r.yaml"
     shell:
-        "Rscript {input.script} -d {input.rscu} -r {output.deltaRSCU} -o {output.optimalCodon} -f {optimalCodonFig}"
+        "Rscript {input.script} -d {input.rscu} -r {output.deltaRSCU} -o {output.optimalCodon} -f {output.optimalCodonFig}"
 
 
 
