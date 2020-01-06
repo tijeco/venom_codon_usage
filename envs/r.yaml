@@ -1,9 +1,9 @@
 channels:
   - r
 dependencies:
-  - r=3.6.1
-  - r-ggplot2=3.1.1
-  - r-dplyr=0.8.0.1
-  - r-tidyr=0.8.3
-  - r-broom=0.5.2
-  - r-optparse=1.6.2
+  - r
+  - r-ggplot2
+  - r-dplyr
+  - r-tidyr
+  - r-broom
+  - r-optparse
