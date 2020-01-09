@@ -54,9 +54,52 @@ def calcRSCU(cds_file):
                 else:
                     rscu = 0
 
-                codonDict[aa][codon][header] = rscu
+                codonDict[aa][codon][header] = (rscu,seq)
 
     return codonDict
+
+def fop_func(optimal_codon_file,rscu_file):
+    optimal_codon_dict = {}
+
+    with open(optimal_codon_file) as f:
+        line1 = 1
+        for line in f:
+            if line1:
+                line1 = 0
+                continue
+            row = line.strip().split(",")
+            optimal_codon_dict[row[1]] = True # if weighted average, put deltaRSCU_norm row here
+    # quant_file = input.quant
+
+    # quant_df  = pd.read_csv(quant_file, sep='\t', header=0)
+    # quant_over2TPM = quant_df[quant_df["TPM"] > 2]
+    # num_seqs = quant_over2TPM.sort_values("TPM").shape[0]
+    # five_percent = round(quant_over2TPM.sort_values("TPM").shape[0] * 0.05)
+    # top5 = quant_over2TPM.sort_values("TPM")[num_seqs-five_percent:]
+
+    cds_dict = {}
+    with open(rscu_file) as f:
+        line1 = 1
+
+
+        for line in f:
+            nop = 0
+            if line1:
+                line1 = 0
+                continue
+            row = line.strip().split(",")
+            header = row[0]
+            seq = row[4]
+            if header not in cds_dict:
+                n = 3
+                seq_codons = [seq[i:i+n] for i in range(0, len(seq), n)]
+                for codon in optimal_codon_dict:
+                    nop += seq_codons.count(codon) # for weight, this would be multiplied by optimal_codon_dict[codon] (deltaRSCU_norm)
+                fop = nop / len(seq_codons)
+                cds_dict[header] = fop
+    return pd.DataFrame.from_dict(list(cds_dict,columns=['header', 'fop']))
+    # cds seq  will be in file rscu output csv
+
 
 
 SAMPLES_venom, = glob_wildcards("{sample}_venom_1.fq")  # read in file list
@@ -210,14 +253,14 @@ rule rscu:
 
         rscu_dict = calcRSCU(input.cds)
         with open(output[0],"w") as out:
-            out.write("header,aa,codon,rscu,class\n")
+            out.write("header,aa,codon,rscu,seq,class\n")
             for aa in rscu_dict:
                 for codon in rscu_dict[aa]:
                     for header in rscu_dict[aa][codon]:
                         if header in list(bottom5["Name"]):
-                            out.write(header + "," + aa + "," + codon + "," + str(rscu_dict[aa][codon][header]) + ",bottom_5percent\n")
+                            out.write(header + "," + aa + "," + codon + "," + str(rscu_dict[aa][codon][header][0]) + "," + rscu_dict[aa][codon][header][1] + ",bottom_5percent\n")
                         elif header in list(top5["Name"]):
-                            out.write(header + "," + aa + "," + codon + "," + str(rscu_dict[aa][codon][header]) + ",top_5percent\n")
+                            out.write(header + "," + aa + "," + codon + "," + str(rscu_dict[aa][codon][header][0]) + "," + rscu_dict[aa][codon][header][1] + ",top_5percent\n")
 
 rule optimal_codon:
     input:
@@ -232,6 +275,42 @@ rule optimal_codon:
     shell:
         "Rscript {input.script} -d {input.rscu} -r {output.deltaRSCU} -o {output.optimalCodon} -f {output.optimalCodonFig}"
 
+
+# fop
+# optimial_codon
+# cds
+# for seq in cds
+    # count optimal codons
+
+# quant
+# subset cds fop that is only in the top 5%
+rule body_fop:
+    input:
+        optimal_codon = "{sample}_body.optimalCodon.csv",
+        cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds"
+    output:
+        "{sample}_body.fop.csv"
+    run:
+        fop_pd = fop_func(optimal_codon,cds)
+        fop_pd.to_csv(output[0],index=False)
+
+rule venom_fop:
+    input:
+        optimal_codon = "{sample}_body.optimalCodon.csv",
+        cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds"
+    output:
+        "{sample}_venom.fop.csv"
+    run:
+        fop_pd = fop_func(optimal_codon,cds)
+        fop_pd.to_csv(output[0],index=False)
+rule fop:
+    input:
+        venom = "{sample}_venom.fop.csv",
+        body = "{sample}_body.fop.csv"
+    output:
+        "{sample}.fop.tmp"
+    shell:
+        "touch {output}"
 
 
 
