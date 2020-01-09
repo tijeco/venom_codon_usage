@@ -110,7 +110,8 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_body.optimalCodon.csv", sample = SAMPLES)
+        expand("{sample}.fop.tmp", sample = SAMPLES)
+        # expand("{sample}_body.optimalCodon.csv", sample = SAMPLES)
         # expand("{sample}_body.rscu.csv", sample = SAMPLES)
         # expand("{sample}_trinity.Trinity.fasta.transdecoder.cds", sample = SAMPLES)
         # expand("{sample}_supertranscript.fasta", sample = SAMPLES)
