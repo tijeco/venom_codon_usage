@@ -292,7 +292,7 @@ rule body_fop:
     output:
         "{sample}_body.fop.csv"
     run:
-        fop_pd = fop_func(optimal_codon,cds)
+        fop_pd = fop_func(input.optimal_codon,input.cds)
         fop_pd.to_csv(output[0],index=False)
 
 rule venom_fop:
@@ -302,7 +302,7 @@ rule venom_fop:
     output:
         "{sample}_venom.fop.csv"
     run:
-        fop_pd = fop_func(optimal_codon,cds)
+        fop_pd = fop_func(input.optimal_codon,input.cds)
         fop_pd.to_csv(output[0],index=False)
 rule fop:
     input:
