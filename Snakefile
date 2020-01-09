@@ -288,7 +288,7 @@ rule optimal_codon:
 rule body_fop:
     input:
         optimal_codon = "{sample}_body.optimalCodon.csv",
-        cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds"
+        cds = "{sample}_body.rscu.csv"
     output:
         "{sample}_body.fop.csv"
     run:
@@ -298,7 +298,7 @@ rule body_fop:
 rule venom_fop:
     input:
         optimal_codon = "{sample}_body.optimalCodon.csv",
-        cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds"
+        cds = "{sample}_venom.rscu.csv"
     output:
         "{sample}_venom.fop.csv"
     run:
