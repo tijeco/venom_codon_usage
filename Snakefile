@@ -91,7 +91,7 @@ def fop_func(optimal_codon_file,rscu_json):
             # seq = rscu_dict[list(rscu_dict.keys())[0]][list(rscu_dict[rscu_dict[list(rscu_dict.keys())[0]]]).keys())[0]][1]
             print(rscu_dict[aa].keys())
             for codon in rscu_dict[aa]:
-
+                print(codon)
                 for header in rscu_dict[aa][codon]:
 
                     seq = rscu_dict[aa][codon][header][1]
