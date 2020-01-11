@@ -81,24 +81,26 @@ def fop_func(optimal_codon_file,rscu_json):
 
     cds_dict = {}
     print(rscu_json)
-    rscu_dict = json.load(rscu_json)
+    with open(rscu_json) as json_file:
+
+        rscu_dict = json.load(json_file)
     # rscu_dict[aa][codon][header][0]
 
-    for header in rscu_dict:
-        # seq = rscu_dict[list(rscu_dict.keys())[0]][list(rscu_dict[rscu_dict[list(rscu_dict.keys())[0]]]).keys())[0]][1]
-        for aa in rscu_dict[header]:
-            for codon in rscu_dict[header][aa][codon]:
-                seq = rscu_dict[header][aa][codon][1]
+        for header in rscu_dict:
+            # seq = rscu_dict[list(rscu_dict.keys())[0]][list(rscu_dict[rscu_dict[list(rscu_dict.keys())[0]]]).keys())[0]][1]
+            for aa in rscu_dict[header]:
+                for codon in rscu_dict[header][aa][codon]:
+                    seq = rscu_dict[header][aa][codon][1]
+                    continue
                 continue
             continue
-        continue
-        if header not in cds_dict:
-            n = 3
-            seq_codons = [seq[i:i+n] for i in range(0, len(seq), n)]
-            for codon in optimal_codon_dict:
-                nop += seq_codons.count(codon) # for weight, this would be multiplied by optimal_codon_dict[codon] (deltaRSCU_norm)
-            fop = nop / len(seq_codons)
-            cds_dict[header] = fop
+            if header not in cds_dict:
+                n = 3
+                seq_codons = [seq[i:i+n] for i in range(0, len(seq), n)]
+                for codon in optimal_codon_dict:
+                    nop += seq_codons.count(codon) # for weight, this would be multiplied by optimal_codon_dict[codon] (deltaRSCU_norm)
+                fop = nop / len(seq_codons)
+                cds_dict[header] = fop
     return pd.DataFrame.from_dict(list(cds_dict,columns=['header', 'fop']))
     # cds seq  will be in file rscu output csv
 
