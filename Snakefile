@@ -89,8 +89,11 @@ def fop_func(optimal_codon_file,rscu_json):
 
         for aa in rscu_dict:
             # seq = rscu_dict[list(rscu_dict.keys())[0]][list(rscu_dict[rscu_dict[list(rscu_dict.keys())[0]]]).keys())[0]][1]
+            print(rscu_dict[aa].keys())
             for codon in rscu_dict[aa]:
+
                 for header in rscu_dict[aa][codon]:
+
                     seq = rscu_dict[aa][codon][header][1]
                     nop = 0
                     if header not in cds_dict:
@@ -100,8 +103,8 @@ def fop_func(optimal_codon_file,rscu_json):
                             nop += seq_codons.count(codon) # for weight, this would be multiplied by optimal_codon_dict[codon] (deltaRSCU_norm)
                         fop = nop / len(seq_codons)
                         cds_dict[header] = fop
-                    
-                
+                    continue
+                continue
 
     return pd.DataFrame(list(cds_dict.items()),columns=['header', 'fop'])
     # cds seq  will be in file rscu output csv
