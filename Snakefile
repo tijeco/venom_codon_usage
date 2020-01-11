@@ -63,6 +63,7 @@ def calcRSCU(cds_file):
 def fop_func(optimal_codon_file,rscu_json):
     optimal_codon_dict = {}
 
+
     with open(optimal_codon_file) as f:
         line1 = 1
         for line in f:
@@ -93,7 +94,7 @@ def fop_func(optimal_codon_file,rscu_json):
                     seq = rscu_dict[header][aa][codon][1]
                     continue
                 continue
-
+            nop = 0
             if header not in cds_dict:
                 n = 3
                 seq_codons = [seq[i:i+n] for i in range(0, len(seq), n)]
