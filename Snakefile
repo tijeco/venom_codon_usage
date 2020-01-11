@@ -80,6 +80,7 @@ def fop_func(optimal_codon_file,rscu_json):
     # top5 = quant_over2TPM.sort_values("TPM")[num_seqs-five_percent:]
 
     cds_dict = {}
+    print(rscu_json)
     rscu_dict = json.load(rscu_json)
     # rscu_dict[aa][codon][header][0]
 
