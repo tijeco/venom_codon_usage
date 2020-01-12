@@ -317,6 +317,8 @@ rule merge_quant:
         venom_quant = "{sample}_venom_quant/quant.sf"
     output:
         "{sample}_merged_quant.csv"
+    conda:
+        "envs/r.yaml"
     run:
         "Rscript {input.script} -b {input.body_quant} -v {input.venom_quant} -o {output}"
 
