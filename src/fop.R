@@ -5,7 +5,7 @@ library(broom)
 library(optparse)
 
 option_list = list(
-    make_option(c("-v", "--body"),
+    make_option(c("-b", "--body"),
                 type = "character",
                 default = NULL,
                 help = "stata dataset file name",
