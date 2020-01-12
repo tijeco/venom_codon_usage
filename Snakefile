@@ -319,7 +319,7 @@ rule merge_quant:
         "{sample}_merged_quant.csv"
     conda:
         "envs/r.yaml"
-    run:
+    shell:
         "Rscript {input.script} -b {input.body_quant} -v {input.venom_quant} -o {output}"
 
 # rule fop:
