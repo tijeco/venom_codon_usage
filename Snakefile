@@ -309,6 +309,16 @@ rule fop:
         fop_pd = fop_func(input.optimal_codon,input.cds)
         fop_pd.to_csv(output[0],index=False)
 
+rule merge_quant:
+    input:
+        script = "src/fop.R",
+        body_quant = "{sample}_body_quant/quant.sf",
+        venom_quant = "{sample}_venom_quant/quant.sf"
+    output:
+        "{sample}_merged_quant.csv"
+    run:
+        "Rscript {input.script} -b {input.body_quant} -v {input.venom_quant} -o {output}"
+
 # rule fop:
 #     input:
 #         venom = "{sample}_venom.fop.csv",
