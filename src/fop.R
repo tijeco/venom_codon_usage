@@ -25,7 +25,7 @@ option_list = list(
 opt_parser = OptionParser(option_list = option_list);
 opt = parse_args(opt_parser);
 
-if (is.null(opt$data)){
+if (is.null(opt$out)){
   print_help(opt_parser)
   stop("At least one argument must be supplied (input file).n", call. = FALSE)
 }
