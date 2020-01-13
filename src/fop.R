@@ -82,5 +82,5 @@ violin_plot + geom_violin() + geom_boxplot(width=0.1,fill = "white")
 print(violin_plot)
 ggsave(opt$violin, width = 9, height = 5, dpi = 240)
 
-t_test <- t.test(combined_5percent_fop$fop~combined_5percent_fop$tissue)
+t_test <- tidy(t.test(combined_5percent_fop$fop~combined_5percent_fop$tissue))
 write.csv(t_test, file = opt$test, row.names = F, quote = F)
