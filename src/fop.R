@@ -39,4 +39,4 @@ body_quant$TPM_log10 <- log10(body_quant$TPM)
 
 merge_quant <- merge(venom_quant, body_quant, by = "Name",suffixes = c(".venom",".body"))
 merge_quant$diff <- merge_quant$TPM_log10.venom - merge_quant$TPM_log10.body
-write.csv(merge_quant, file = opt$out)
+write.csv(merge_quant, file = opt$out, row.names = F, quote = F)
