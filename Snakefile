@@ -120,7 +120,8 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_merged_quant.csv", sample = SAMPLES)
+        expand("{sample}.combined_1000TPM_fop.csv", sample = SAMPLES)
+        # expand("{sample}_merged_quant.csv", sample = SAMPLES)
         # expand("{sample}.fop.csv", sample = SAMPLES)
         # expand("{sample}_body.optimalCodon.csv", sample = SAMPLES)
         # expand("{sample}_body.rscu.csv", sample = SAMPLES)
@@ -321,6 +322,18 @@ rule merge_quant:
         "envs/r.yaml"
     shell:
         "Rscript {input.script} -b {input.body_quant} -v {input.venom_quant} -o {output}"
+
+rule merge_fop:
+    input:
+        script = "src/fop.R",
+        quant = "{sample}_merged_quant.csv",
+        fop = "{sample}.fop.csv"
+    output:
+        "{sample}.combined_1000TPM_fop.csv"
+    conda:
+        "envs/r.yaml"
+    shell:
+        "Rscript {input.script} -q {input.quant} -f {input.fop} -o {out}"
 
 # rule fop:
 #     input:
