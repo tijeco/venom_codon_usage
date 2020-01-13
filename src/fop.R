@@ -31,21 +31,34 @@ if (is.null(opt$out)){
 }
 
 merge_quant <- read.csv(opt$quant)
-
-venom_up_1000TPM <- merge_quant %>%
-  select(Name,TPM.venom,TPM.body,diff) %>%
-  filter(diff >1 & TPM.venom >1000)
-venom_up_1000TPM$tissue <- "venom"
-
-body_up_1000TPM <- merge_quant %>%
-  select(Name,TPM.venom,TPM.body,diff) %>%
-  filter(diff < -1 & TPM.body >1000)
-body_up_1000TPM$tissue <- "body"
-
-combined_1000TPM <- merge(venom_up_1000TPM,body_up_1000TPM, all = T)
-
 fop <- read.csv(opt$fop)
 
-combined_1000TPM_fop <- merge(fop, combined_1000TPM)
+# venom_up_1000TPM <- merge_quant %>%
+#   select(Name,TPM.venom,TPM.body,diff) %>%
+#   filter(diff >1 & TPM.venom >1000)
+# venom_up_1000TPM$tissue <- "venom"
+#
+# body_up_1000TPM <- merge_quant %>%
+#   select(Name,TPM.venom,TPM.body,diff) %>%
+#   filter(diff < -1 & TPM.body >1000)
+# body_up_1000TPM$tissue <- "body"
+#
+# combined_1000TPM <- merge(venom_up_1000TPM,body_up_1000TPM, all = T)
 
-write.csv(combined_1000TPM_fop, file = opt$out, row.names = F, quote = F)
+
+
+# combined_1000TPM_fop <- merge(fop, combined_1000TPM)
+
+# write.csv(combined_1000TPM_fop, file = opt$out, row.names = F, quote = F)
+
+venom_up_5percent <- merge_quant %>%
+  select(Name,TPM.venom,TPM.body,diff) %>%
+  filter(diff > 1 & TPM.venom > quantile(TPM.venom, 0.95))
+
+body_up_5percent <- merge_quant %>%
+  select(Name,TPM.venom,TPM.body,diff) %>%
+  filter(diff < -1 & TPM.body > quantile(TPM.body, 0.95))
+
+combined_5percent <- merge(venom_up_5percent,body_up_5percent, all = T)
+combined_5percent_fop <- merge(fop, combined_5percent)
+write.csv(combined_5percent_fop, file = opt$out, row.names = F, quote = F)
