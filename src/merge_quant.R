@@ -31,10 +31,10 @@ if (is.null(opt$out)){
 }
 
 venom_quant <- read.table(opt$venom,header=T)
-venom_quant <- subset(venom_quant, TPM > 2)
+# venom_quant <- subset(venom_quant, TPM > 2)
 venom_quant$TPM_log10 <- log10(venom_quant$TPM)
 body_quant <- read.table(opt$body,header=T)
-body_quant <- subset(body_quant, TPM > 2)
+# body_quant <- subset(body_quant, TPM > 2)
 body_quant$TPM_log10 <- log10(body_quant$TPM)
 
 merge_quant <- merge(venom_quant, body_quant, by = "Name",suffixes = c(".venom",".body"))
