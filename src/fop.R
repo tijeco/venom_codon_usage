@@ -59,7 +59,7 @@ body_up_5percent <- merge_quant %>%
   select(Name,TPM.venom,TPM.body,diff) %>%
   filter(diff < -1 & TPM.body > quantile(TPM.body, 0.95))
 
-venom_up5percent$tissue <- "venom"
+venom_up_5percent$tissue <- "venom"
 body_up_5percent$tissue <- "body"
 
 combined_5percent <- merge(venom_up_5percent,body_up_5percent, all = T)
