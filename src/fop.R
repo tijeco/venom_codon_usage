@@ -15,6 +15,11 @@ option_list = list(
                 default = NULL,
                 help = "stata dataset file name",
                 metavar = "character"),
+    make_option(c("-v", "--violin"),
+                type = "character",
+                default = NULL,
+                help = "stata dataset file name",
+                metavar = "character"),
 	  make_option(c("-o", "--out"),
                 type = "character",
                 default = NULL,
@@ -66,5 +71,8 @@ combined_5percent <- merge(venom_up_5percent,body_up_5percent, all = T)
 combined_5percent_fop <- merge(fop, combined_5percent)
 write.csv(combined_5percent_fop, file = opt$out, row.names = F, quote = F)
 
-# violin_plot <- ggplot(Cc_5percent_fop_combined, aes(x = tissue, y = fop,fill = tissue))
-# violin_plot + geom_violin() + geom_boxplot(width=0.1,fill = "white")
+violin_plot <- ggplot(Cc_5percent_fop_combined, aes(x = tissue, y = fop,fill = tissue))
+violin_plot + geom_violin() + geom_boxplot(width=0.1,fill = "white")
+
+print(violin_plot)
+ggsave(opt$violin, width = 9, height = 5, dpi = 240)
