@@ -46,6 +46,6 @@ combined_1000TPM <- merge(venom_up_1000TPM,body_up_1000TPM, all = T)
 
 fop <- read.csv(opt$fop)
 
-combined_1000TPM_fop <- merge(fop, combined)
+combined_1000TPM_fop <- merge(fop, combined_1000TPM)
 
 write.csv(combined_1000TPM_fop, file = opt$out, row.names = F, quote = F)
