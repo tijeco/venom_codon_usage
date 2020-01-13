@@ -5,12 +5,12 @@ library(broom)
 library(optparse)
 
 option_list = list(
-    make_option(c("-b", "--body"),
+    make_option(c("-q", "--quant"),
                 type = "character",
                 default = NULL,
                 help = "stata dataset file name",
                 metavar = "character"),
-    make_option(c("-v", "--venom"),
+    make_option(c("-f", "--fop"),
                 type = "character",
                 default = NULL,
                 help = "stata dataset file name",
@@ -30,13 +30,22 @@ if (is.null(opt$out)){
   stop("At least one argument must be supplied (input file).n", call. = FALSE)
 }
 
-venom_quant <- read.table(opt$venom,header=T)
-venom_quant <- subset(venom_quant, TPM > 2)
-venom_quant$TPM_log10 <- log10(venom_quant$TPM)
-body_quant <- read.table(opt$body,header=T)
-body_quant <- subset(body_quant, TPM > 2)
-body_quant$TPM_log10 <- log10(body_quant$TPM)
+merge_quant <- read.csv(opt$quant)
 
-merge_quant <- merge(venom_quant, body_quant, by = "Name",suffixes = c(".venom",".body"))
-merge_quant$diff <- merge_quant$TPM_log10.venom - merge_quant$TPM_log10.body
-write.csv(merge_quant, file = opt$out, row.names = F, quote = F)
+venom_up_1000TPM <- merge_quant %>%
+  select(Name,TPM.venom,TPM.body,diff) %>%
+  filter(diff >1 & TPM.venom >1000)
+venom_up_1000TPM$tissue <- "venom"
+
+body_up_1000TPM <- merge_quant %>%
+  select(Name,TPM.venom,TPM.body,diff) %>%
+  filter(diff < -1 & TPM.body >1000)
+body_up_1000TPM$tissue <- "body"
+
+combined_1000TPM <- merge(venom_up_1000TPM,body_up_1000TPM, all = T)
+
+fop <- read.csv(opt$fop)
+
+combined_1000TPM_fop <- merge(fop, combined)
+
+write.csv(combined_1000TPM_fop, file = opt$out, row.names = F, quote = F)
