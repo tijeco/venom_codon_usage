@@ -330,12 +330,13 @@ rule merge_fop:
         fop = "{sample}.fop.csv"
     output:
         combined_5percent = "{sample}.combined_5percent_fop.csv",
+        test = "{sample}.t_test.csv",
         violin = "{sample}.combined_5percent_fop.png"
 
     conda:
         "envs/r.yaml"
     shell:
-        "Rscript {input.script} -q {input.quant} -f {input.fop} -o {output.combined_5percent} -v {output.violin}"
+        "Rscript {input.script} -q {input.quant} -f {input.fop} -o {output.combined_5percent} -v {output.violin} -t {output.test}"
 
 # rule fop:
 #     input:
