@@ -83,4 +83,4 @@ print(violin_plot)
 ggsave(opt$violin, width = 9, height = 5, dpi = 240)
 
 t_test <- t.test(combined_5percent_fop$fop~combined_5percent_fop$tissue)
-write.csv(opt$test, file = opt$out, row.names = F, quote = F)
+write.csv(t_test, file = opt$test, row.names = F, quote = F)
