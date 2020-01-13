@@ -71,7 +71,7 @@ combined_5percent <- merge(venom_up_5percent,body_up_5percent, all = T)
 combined_5percent_fop <- merge(fop, combined_5percent)
 write.csv(combined_5percent_fop, file = opt$out, row.names = F, quote = F)
 
-violin_plot <- ggplot(Cc_5percent_fop_combined, aes(x = tissue, y = fop,fill = tissue))
+violin_plot <- ggplot(combined_5percent, aes(x = tissue, y = fop,fill = tissue))
 violin_plot + geom_violin() + geom_boxplot(width=0.1,fill = "white")
 
 print(violin_plot)
