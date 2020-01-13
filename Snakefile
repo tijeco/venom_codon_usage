@@ -333,7 +333,7 @@ rule merge_fop:
     conda:
         "envs/r.yaml"
     shell:
-        "Rscript {input.script} -q {input.quant} -f {input.fop} -o {out}"
+        "Rscript {input.script} -q {input.quant} -f {input.fop} -o {output}"
 
 # rule fop:
 #     input:
