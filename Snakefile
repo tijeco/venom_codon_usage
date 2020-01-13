@@ -107,7 +107,7 @@ def fop_func(optimal_codon_file,rscu_json):
                     # continue
                 # continue
 
-    return pd.DataFrame(list(cds_dict.items()),columns=['header', 'fop'])
+    return pd.DataFrame(list(cds_dict.items()),columns=['Name', 'fop'])
     # cds seq  will be in file rscu output csv
 
 
@@ -312,7 +312,7 @@ rule fop:
 
 rule merge_quant:
     input:
-        script = "src/fop.R",
+        script = "src/merge_quant.R",
         body_quant = "{sample}_body_quant/quant.sf",
         venom_quant = "{sample}_venom_quant/quant.sf"
     output:
