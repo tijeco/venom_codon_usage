@@ -140,7 +140,8 @@ rule fastp:
     conda:
         "envs/fastp.yaml"
     shell:
-        "fastp -c -r -M 3 -i {input.raw1} -I {input.raw2} -o {output.p1} -O {output.p2}"
+        "fastp -i {input.raw1} -I {input.raw2} -o {output.p1} -O {output.p2}"
+        # "fastp -c -r -M 3 -i {input.raw1} -I {input.raw2} -o {output.p1} -O {output.p2}"
 
 rule banana:
     input:
