@@ -1,8 +1,9 @@
-name: codon
+name: vcu
 channels:
   - bioconda
 dependencies:
-  - sra-tools=2.10.0
-  - snakemake=5.5.4
-  - biopython=1.70
-  - pandas
+  - python=3.6
+  - sra-tools=2.8.0
+  - snakemake=3.13.3
+  - biopython=1.76
+  # - pandas
