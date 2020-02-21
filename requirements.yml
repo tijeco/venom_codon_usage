@@ -4,3 +4,5 @@ channels:
 dependencies:
   - sra-tools=2.10.0
   - snakemake=5.5.4
+  - biopython=1.70
+  - pandas
