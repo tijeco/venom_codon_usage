@@ -2,4 +2,5 @@ channels:
   - bioconda
 dependencies:
   - trinity=2.8.4
-  - salmon=0.14.1 
+  - salmon=0.14.1
+  - numpy
