@@ -399,6 +399,12 @@ rule aa_usage:
             out.write("header,mean_sc,total_sc\n")
             for header in sc_dict:
                 out.write(header + "," + sc_dict[header][0] + "," + sc_dict[header][1] + "\n")
+rule merge_aa_usage
+    input:
+    output: 
+        test = 
+    conda:
+        "envs/r.yaml"
                     
 # rule fop:
 #     input:
