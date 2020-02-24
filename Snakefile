@@ -65,7 +65,7 @@ def calcRSCU(cds_file):
                  'Val': {'GTA': {}, 'GTT': {}, 'GTC':{}, 'GTG': {}},
                  'Tyr': {'TAT': {}, 'TAC': {}}
                 }
-
+    for
         n = 3
         codons = [seq[i:i+n] for i in range(0, len(seq), n)]
 
