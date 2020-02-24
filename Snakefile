@@ -389,9 +389,9 @@ rule merge_fop:
         "Rscript {input.script} -q {input.quant} -f {input.fop} -o {output.combined_5percent} -v {output.violin} -s {output.test}"
 rule aa_usage:
     input:
-        script = "{sample}complete_longest_isoform.cds"
+        cds = "{sample}_complete_longest_isoform.cds"
     output:
-        aa_usage = "{sample}aminoAcidUsage.csv"
+        aa_usage = "{sample}_aminoAcidUsage.csv"
     run:    
         sc_dict = calcAminoUsage(input.cds)
         with open(output.json, 'w') as json_file:
