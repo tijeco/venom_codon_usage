@@ -65,7 +65,9 @@ def calcRSCU(cds_file):
                  'Val': {'GTA': {}, 'GTT': {}, 'GTC':{}, 'GTG': {}},
                  'Tyr': {'TAT': {}, 'TAC': {}}
                 }
-    for
+    for record in SeqIO.parse(cds_file, "fasta"):
+        header = record.description
+        seq = str(record.seq) 
         n = 3
         codons = [seq[i:i+n] for i in range(0, len(seq), n)]
 
