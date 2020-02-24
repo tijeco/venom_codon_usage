@@ -38,6 +38,7 @@ def calcRSCU(cds_file):
         # print(isoform_dict[gene][0])
         header = gene
         seq = isoform_dict[gene][1]
+
             # filter by longest isoform, somehow
         n = 3
         codons = [seq[i:i+n] for i in range(0, len(seq), n)]
@@ -202,6 +203,9 @@ rule transdecoder:
         TransDecoder.LongOrfs -t {input}  -m 30
         TransDecoder.Predict -t {input} --single_best_only
         """
+rule longest_complete_isoform:
+    input:
+
 
 # this will also be venom and body combined
 rule supertranscript:
