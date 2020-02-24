@@ -394,17 +394,11 @@ rule aa_usage:
         aa_usage = "{sample}_aminoAcidUsage.csv"
     run:    
         sc_dict = calcAminoUsage(input.cds)
-        with open(output.json, 'w') as json_file:
-                json.dump(sc_dict, json_file)
-
-            with open(output.sc,"w") as out:
-                out.write("header,mean_sc,total_sc,class\n")
-                for header in sc_dict:
-                    for mean_sc in sc_dict[header]:
-                        out.write(header + "," + mean_sc + "," + total_sc + str(sc_dict[header][mean_sc][tota_sc][0]) + "\n")
-                    for total_sc in sc_dict[header]:
-                        out.write(header + "," + mean_sc + "," + total_sc + str(sc_dict[header][mean_sc][tota_sc][0]) + "\n")
-
+        with open(output.sc,"w") as out:
+            out.write("header,mean_sc,total_sc\n")
+            for header in sc_dict:
+                out.write(header + "," + sc_dict[header][0] + "," + sc_dict[header][1] + "\n")
+                    
 # rule fop:
 #     input:
 #         venom = "{sample}_venom.fop.csv",
