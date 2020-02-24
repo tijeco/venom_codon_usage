@@ -244,8 +244,26 @@ rule transdecoder:
         TransDecoder.LongOrfs -t {input}  -m 30
         TransDecoder.Predict -t {input} --single_best_only
         """
-rule longest_complete_isoform:
+rule Longest_Isoform:
     input:
+        "{sample}_trinity.Trinity.fasta.transdecoder.cds"
+    output:
+        "{sample}_complete_longest_isoform.cds"
+    run:
+        isoform_dict = {}
+            for record in SeqIO.parse(cds_file, "fasta"):
+                header = record.description
+                seq = str(record.seq)
+                if "complete" in header:
+                    gene = header.split("_i")[0]
+                    if gene not in isoform_dict:
+                        isoform_dict[gene] = (header,seq)
+                        elif len(seq) > len(isoform_dict[gene][1]):
+                            isoform_dict[gene] = (header,seq)
+            for gene in isoform_dict:
+                header = gene
+                seq = isoform_dict[gene][1] # filter by longest isoform, somehow
+                out.write(header + "," + seq + "\n")  
 
 
 # this will also be venom and body combined
