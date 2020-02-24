@@ -67,7 +67,7 @@ def calcRSCU(cds_file):
                 }
     for record in SeqIO.parse(cds_file, "fasta"):
         header = record.description
-        seq = str(record.seq) 
+        seq = str(record.seq)
         n = 3
         codons = [seq[i:i+n] for i in range(0, len(seq), n)]
 
@@ -304,7 +304,7 @@ rule rscu:
     input:
         quant = "{sample}_body_quant/quant.sf",
         cds = "{sample}_complete_longest_isoform.cds"
-    output:        
+    output:
         rscu = "{sample}_body.rscu.csv",
         json = "{sample}_body.rscu.json"
     run:
@@ -393,7 +393,7 @@ rule aa_usage:
         cds = "{sample}_complete_longest_isoform.cds"
     output:
         aa_usage = "{sample}_aminoAcidUsage.csv"
-    run:    
+    run:
         sc_dict = calcAminoUsage(input.cds)
         with open(output.sc,"w") as out:
             out.write("header,mean_sc,total_sc\n")
@@ -401,11 +401,12 @@ rule aa_usage:
                 out.write(header + "," + sc_dict[header][0] + "," + sc_dict[header][1] + "\n")
 rule merge_aa_usage
     input:
-    output: 
-        test = 
+        script =
+    output:
+        test =
     conda:
         "envs/r.yaml"
-                    
+
 # rule fop:
 #     input:
 #         venom = "{sample}_venom.fop.csv",
