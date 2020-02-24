@@ -302,8 +302,8 @@ rule salmon_body_quant:
 rule rscu:
     input:
         quant = "{sample}_body_quant/quant.sf",
-        cds = "{sample}_trinity.Trinity.fasta.transdecoder.cds" # just body
-    output:
+        cds = "{sample}_complete_longest_isoform.cds"
+    output:        
         rscu = "{sample}_body.rscu.csv",
         json = "{sample}_body.rscu.json"
     run:
