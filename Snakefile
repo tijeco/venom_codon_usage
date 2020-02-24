@@ -21,7 +21,7 @@ def calcAminoUsage(cds_file):
                 'CCT':['Pro', 31.8],'CCC':['Pro', 31.8],'CCA':['Pro', 31.8],'CCG':['Pro', 31.8],
                 'TCA':['Ser', 17.86],'TCT':['Ser', 17.86],'TCC':['Ser', 17.86],'TCG':['Ser', 17.86],'AGT':['Ser', 17.86],'AGC':['Ser', 17.86],
                 'ACT':['Thr', 21.62],'ACC':['Thr', 21.62],'ACA':['Thr', 21.62],'ACG':['Thr', 21.62],
-                'TAA':['Stop', 0],'TAG':['Stop', 0],'TGA':['Stop', 0],
+                'TAA':['Stop', 0],'TAG':['Stop', 0],'TGA':['Stop', 0], 
                 'TGG':['Trp', 73.0],
                 'TAT':['Tyr', 57.00],'TAC':['Tyr', 57.00],
                 'GTA':['Val', 12.28],'GTT':['Val', 12.28],'GTC':['Val', 12.28],'GTG':['Val', 12.28],
@@ -36,11 +36,11 @@ def calcAminoUsage(cds_file):
         for codon, aa in aaDict.items():    # for every codon in aaDict access both values for the codon
         aa_count = len(codons) - 1 #the total number of aa in a sequence which is the same as the number of codons in the codons array
         total_sc = 0.0 #have to give the variable a value before the loop
-        for codon in codons: #for each codon in the codons array
+        for codon in codons: #for each codon in the codons array 
             total_sc += aaDict[codon][1] # the total sc score of a sequence is calculated by searching the dictionary for the values of the codon and adding it to the running total
         mean_sc = total_sc / aa_count # The average sc formula
         sc_dict[header] = [mean_sc,total_sc] # creating a dictionary using header as the key and meansc, and total sc as values
-
+       
     return sc_dict
 
 def calcRSCU(cds_file):
@@ -66,21 +66,6 @@ def calcRSCU(cds_file):
                  'Tyr': {'TAT': {}, 'TAC': {}}
                 }
 
-    isoform_dict = {}
-    for record in SeqIO.parse(cds_file, "fasta"):
-        header, seq = record.description,str(record.seq)
-        if "complete" in header:
-            gene = header.split("_i")[0]
-            if gene not in isoform_dict:
-                isoform_dict[gene] = (header,seq)
-            elif len(seq) > len(isoform_dict[gene][1]):
-                isoform_dict[gene] = (header,seq)
-    for gene in isoform_dict:
-        # print(isoform_dict[gene][0])
-        header = gene
-        seq = isoform_dict[gene][1]
-
-            # filter by longest isoform, somehow
         n = 3
         codons = [seq[i:i+n] for i in range(0, len(seq), n)]
 
@@ -260,12 +245,10 @@ rule Longest_Isoform:
                     isoform_dict[gene] = (header,seq)
                     elif len(seq) > len(isoform_dict[gene][1]):
                         isoform_dict[gene] = (header,seq)
-
-            for gene in isoform_dict:
-                header = gene
-                seq = isoform_dict[gene][1] # filter by longest isoform, somehow
-                out.write(header + "," + seq + "\n")
-
+        for gene in isoform_dict:
+            header = gene
+            seq = isoform_dict[gene][1] # filter by longest isoform, somehow
+            out.write(header + "," + seq + "\n")           
 
 # this will also be venom and body combined
 rule supertranscript:
