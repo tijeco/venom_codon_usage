@@ -219,7 +219,7 @@ rule Longest_Isoform:
         "{sample}_complete_longest_isoform.cds"
     run:
         isoform_dict = {}
-        for record in SeqIO.parse(cds_file, "fasta"):
+        for record in SeqIO.parse(input, "fasta"):
             header = record.description
             seq = str(record.seq)
             if "complete" in header:
