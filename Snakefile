@@ -228,11 +228,12 @@ rule Longest_Isoform:
                     isoform_dict[gene] = (header,seq)
                 elif len(seq) > len(isoform_dict[gene][1]):
                     isoform_dict[gene] = (header,seq)
-        for gene in isoform_dict:
-            header = gene
-            seq = isoform_dict[gene][1] # filter by longest isoform, somehow
-            out.write(">" + header + "\n")
-            out.write(seq + "\n")
+        with open(output,"w") as out:
+            for gene in isoform_dict:
+                header = gene
+                seq = isoform_dict[gene][1] # filter by longest isoform, somehow
+                out.write(">" + header + "\n")
+                out.write(seq + "\n")
 
 # this will also be venom and body combined
 rule supertranscript:
