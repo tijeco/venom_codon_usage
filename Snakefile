@@ -34,7 +34,7 @@ def calcAminoUsage(cds_file):
         n = 3
         codons = [seq[i:i+n] for i in range(0, len(seq), n)] #an array including the values for the sequence ie "ATG","AAA",etc.
         for codon, aa in aaDict.items():    # for every codon in aaDict access both values for the codon
-        aa_count = len(codons) - 1 #the total number of aa in a sequence which is the same as the number of codons in the codons array
+            aa_count = len(codons) - 1 #the total number of aa in a sequence which is the same as the number of codons in the codons array
         total_sc = 0.0 #have to give the variable a value before the loop
         for codon in codons: #for each codon in the codons array
             total_sc += aaDict[codon][1] # the total sc score of a sequence is calculated by searching the dictionary for the values of the codon and adding it to the running total
