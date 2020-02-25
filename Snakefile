@@ -89,7 +89,7 @@ def calcRSCU(cds_file):
 
     return codonDict
 
-def fop_func(optimal_codon_file,rscu_json):
+def fop_func(optimal_codon_file,cds_file):
     optimal_codon_dict = {}
 
 
@@ -101,38 +101,19 @@ def fop_func(optimal_codon_file,rscu_json):
                 continue
             row = line.strip().split(",")
             optimal_codon_dict[row[1]] = True # if weighted average, put deltaRSCU_norm row here
-    # quant_file = input.quant
-
-    # quant_df  = pd.read_csv(quant_file, sep='\t', header=0)
-    # quant_over2TPM = quant_df[quant_df["TPM"] > 2]
-    # num_seqs = quant_over2TPM.sort_values("TPM").shape[0]
-    # five_percent = round(quant_over2TPM.sort_values("TPM").shape[0] * 0.05)
-    # top5 = quant_over2TPM.sort_values("TPM")[num_seqs-five_percent:]
 
     cds_dict = {}
-    print(rscu_json)
-    with open(rscu_json) as json_file:
-
-        rscu_dict = json.load(json_file)
-    # rscu_dict[aa][codon][header][0]
-
-        # for aa in rscu_dict:
-        #     # seq = rscu_dict[list(rscu_dict.keys())[0]][list(rscu_dict[rscu_dict[list(rscu_dict.keys())[0]]]).keys())[0]][1]
-        #     print(rscu_dict[aa].keys())
-        #     for codon in rscu_dict[aa]:
-        #         print(codon)
-        #         print(rscu_dict[aa][codon].keys())
-        for header in rscu_dict['Ala']['GCT']:
-            # print(aa,codon,header)
-            seq = rscu_dict['Ala']['GCT'][header][1]
-            nop = 0
-            if header not in cds_dict:
-                n = 3
-                seq_codons = [seq[i:i+n] for i in range(0, len(seq), n)]
-                for codon in optimal_codon_dict:
-                    nop += seq_codons.count(codon) # for weight, this would be multiplied by optimal_codon_dict[codon] (deltaRSCU_norm)
-                fop = nop / len(seq_codons)
-                cds_dict[header] = fop
+    for record in SeqIO.parse(cds_file, "fasta"):
+        header = record.description
+        seq = str(record.seq)
+        nop = 0
+        if header not in cds_dict:
+            n = 3
+            seq_codons = [seq[i:i+n] for i in range(0, len(seq), n)]
+            for codon in optimal_codon_dict:
+                nop += seq_codons.count(codon) # for weight, this would be multiplied by optimal_codon_dict[codon] (deltaRSCU_norm)
+            fop = nop / len(seq_codons)
+            cds_dict[header] = fop
                     # continue
                 # continue
 
@@ -355,7 +336,7 @@ rule optimal_codon:
 rule fop:
     input:
         optimal_codon = "{sample}_body.optimalCodon.csv",
-        cds = "{sample}_body.rscu.json"
+        cds = "{sample}_complete_longest_isoform.cds"
     output:
         "{sample}.fop.csv"
     run:
@@ -399,36 +380,13 @@ rule aa_usage:
             out.write("header,mean_sc,total_sc\n")
             for header in sc_dict:
                 out.write(header + "," + sc_dict[header][0] + "," + sc_dict[header][1] + "\n")
-rule merge_aa_usage
-    input:
-        script =
-    output:
-        test =
-    conda:
-        "envs/r.yaml"
 
-# rule fop:
+##### Will update this soon #########
+# rule merge_aa_usage
 #     input:
-#         venom = "{sample}_venom.fop.csv",
-#         body = "{sample}_body.fop.csv"
+#         script =
 #     output:
-#         "{sample}.fop.tmp"
-#     shell:
-#         "touch {output}"
-
-
-
-        # rscu_panda = pd.DataFrame.from_dict({(i,j): rscu_dict[i][j]
-        #                    for i in rscu_dict.keys()
-        #                    for j in rscu_dict[i].keys()})
-        # rscu_panda.to_csv(output[0])
-    #     with open([output],"w") as out:
-    #         out.write("temp")
-
-        # get quant file, split into top and bottom 5 percent. Write to file
-
-        # columns will be (header,aa,codon,rscu, high/low)
-        # Sort tpm values from highest to lowest,
-        # then count total number of tpm values,
-        # set n = total number of tpm values * 0.05,
-        # Top5% = first n values, low5% = last n values
+#         test =
+#     conda:
+#         "envs/r.yaml"
+###########################
