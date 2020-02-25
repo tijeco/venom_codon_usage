@@ -226,8 +226,8 @@ rule Longest_Isoform:
                 gene = header.split("_i")[0]
                 if gene not in isoform_dict:
                     isoform_dict[gene] = (header,seq)
-                    elif len(seq) > len(isoform_dict[gene][1]):
-                        isoform_dict[gene] = (header,seq)
+                elif len(seq) > len(isoform_dict[gene][1]):
+                    isoform_dict[gene] = (header,seq)
         for gene in isoform_dict:
             header = gene
             seq = isoform_dict[gene][1] # filter by longest isoform, somehow
