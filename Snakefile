@@ -122,8 +122,8 @@ def fop_func(optimal_codon_file,cds_file):
 
 
 
-SAMPLES_venom, = glob_wildcards("{sample}_venom_1.fq")  # read in file list
-SAMPLES_body, = glob_wildcards("{sample}_body_1.fq")  # read in file list
+# SAMPLES_venom, = glob_wildcards("{sample}_venom_1.fq")  # read in file list
+# SAMPLES_body, = glob_wildcards("{sample}_body_1.fq")  # read in file list
 SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 
 
@@ -212,7 +212,7 @@ rule transdecoder:
         TransDecoder.LongOrfs -t {input}  -m 30
         TransDecoder.Predict -t {input} --single_best_only
         """
-rule Longest_Isoform:
+rule longest_isoform:
     input:
         "{sample}_trinity.Trinity.fasta.transdecoder.cds"
     output:
