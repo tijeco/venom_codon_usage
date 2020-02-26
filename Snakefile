@@ -212,6 +212,7 @@ rule transdecoder:
         TransDecoder.LongOrfs -t {input}  -m 30
         TransDecoder.Predict -t {input} --single_best_only
         """
+
 rule longest_isoform:
     input:
         "{sample}_trinity.Trinity.fasta.transdecoder.cds"
@@ -219,7 +220,7 @@ rule longest_isoform:
         "{sample}_complete_longest_isoform.cds"
     run:
         isoform_dict = {}
-        for record in SeqIO.parse(input, "fasta"):
+        for record in SeqIO.parse(input[0], "fasta"):
             header = record.description
             seq = str(record.seq)
             print("header",header)
