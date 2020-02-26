@@ -223,9 +223,9 @@ rule longest_isoform:
         for record in SeqIO.parse(input[0], "fasta"):
             header = record.description
             seq = str(record.seq)
-            print("header",header)
+            # print("header",header)
             if "complete" in header:
-                print("Found complete gene!")
+                # print("Found complete gene!")
                 gene = header.split("_i")[0]
                 if gene not in isoform_dict:
                     isoform_dict[gene] = (header,seq)
