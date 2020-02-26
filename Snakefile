@@ -228,6 +228,7 @@ rule Longest_Isoform:
                     isoform_dict[gene] = (header,seq)
                 elif len(seq) > len(isoform_dict[gene][1]):
                     isoform_dict[gene] = (header,seq)
+        print("Genes processed",len(isoform_dict))
         with open(output[0],"w") as out:
             for gene in isoform_dict:
                 header = gene
