@@ -223,6 +223,7 @@ rule Longest_Isoform:
             header = record.description
             seq = str(record.seq)
             if "complete" in header:
+                print("Found complete gene!")
                 gene = header.split("_i")[0]
                 if gene not in isoform_dict:
                     isoform_dict[gene] = (header,seq)
