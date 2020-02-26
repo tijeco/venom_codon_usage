@@ -222,7 +222,7 @@ rule longest_isoform:
         for record in SeqIO.parse(input, "fasta"):
             header = record.description
             seq = str(record.seq)
-            print(header)
+            print("header",header)
             if "complete" in header:
                 print("Found complete gene!")
                 gene = header.split("_i")[0]
