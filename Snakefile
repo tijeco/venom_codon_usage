@@ -130,7 +130,8 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}.combined_5percent_fop.csv", sample = SAMPLES)
+        expand("{sample}_aminoAcidUsage.csv", sample = SAMPLES) 
+        # expand("{sample}.combined_5percent_fop.csv", sample = SAMPLES)
         # expand("{sample}_merged_quant.csv", sample = SAMPLES)
         # expand("{sample}.fop.csv", sample = SAMPLES)
         # expand("{sample}_body.optimalCodon.csv", sample = SAMPLES)
