@@ -130,7 +130,7 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_aminoAcidUsage.csv", sample = SAMPLES) 
+        expand("{sample}_aminoAcidUsage.csv", sample = SAMPLES)
         # expand("{sample}.combined_5percent_fop.csv", sample = SAMPLES)
         # expand("{sample}_merged_quant.csv", sample = SAMPLES)
         # expand("{sample}.fop.csv", sample = SAMPLES)
@@ -382,7 +382,7 @@ rule aa_usage:
         aa_usage = "{sample}_aminoAcidUsage.csv"
     run:
         sc_dict = calcAminoUsage(input.cds)
-        with open(output.sc,"w") as out:
+        with open(output.aa_usage,"w") as out:
             out.write("header,mean_sc,total_sc\n")
             for header in sc_dict:
                 out.write(header + "," + sc_dict[header][0] + "," + sc_dict[header][1] + "\n")
