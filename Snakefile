@@ -385,7 +385,7 @@ rule aa_usage:
         with open(output.aa_usage,"w") as out:
             out.write("header,mean_sc,total_sc\n")
             for header in sc_dict:
-                out.write(header + "," + sc_dict[header][0] + "," + sc_dict[header][1] + "\n")
+                out.write(header + "," + str(sc_dict[header][0]) + "," + str(sc_dict[header][1]) + "\n")
 
 ##### Will update this soon #########
 # rule merge_aa_usage
