@@ -130,7 +130,8 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}_aminoAcidUsage.csv", sample = SAMPLES)
+        expand("{sample}.total_sc.t_test.csv", sample = SAMPLES)
+        # expand("{sample}_aminoAcidUsage.csv", sample = SAMPLES)
         # expand("{sample}.combined_5percent_fop.csv", sample = SAMPLES)
         # expand("{sample}_merged_quant.csv", sample = SAMPLES)
         # expand("{sample}.fop.csv", sample = SAMPLES)
@@ -386,6 +387,23 @@ rule aa_usage:
             out.write("header,mean_sc,total_sc\n")
             for header in sc_dict:
                 out.write(header + "," + str(sc_dict[header][0]) + "," + str(sc_dict[header][1]) + "\n")
+
+rule merge_sc:
+    input:
+        script = "src/sc.R"
+        quant = "{sample}_merged_quant.csv",
+        aa_usage = "{sample}_aminoAcidUsage.csv"
+    output:
+        combined_5percent = "{sample}.combined_5percent_sc.csv",
+        mean_test = "{sample}.mean_sc.t_test.csv",
+        total_test = "{sample}.total_sc.t_test.csv"
+    conda:
+        "envs/r.yaml"
+    shell:
+        "Rscript {input.script} -q {input.quant} -f {input.aa_usage} -o {output.combined_5percent} -s {output.total_test} -m {output.mean_test}"
+
+
+
 
 ##### Will update this soon #########
 # rule merge_aa_usage
