@@ -130,7 +130,7 @@ SAMPLES, = glob_wildcards("{sample}_venom_1.fq")
 print(SAMPLES)
 rule final:
     input:
-        expand("{sample}.total_sc.t_test.csv", sample = SAMPLES)
+        expand("{sample}.total_sc_t_test.csv", sample = SAMPLES)
         # expand("{sample}_aminoAcidUsage.csv", sample = SAMPLES)
         # expand("{sample}.combined_5percent_fop.csv", sample = SAMPLES)
         # expand("{sample}_merged_quant.csv", sample = SAMPLES)
@@ -384,7 +384,7 @@ rule aa_usage:
     run:
         sc_dict = calcAminoUsage(input.cds)
         with open(output.aa_usage,"w") as out:
-            out.write("header,mean_sc,total_sc\n")
+            out.write("Name,mean_sc,total_sc\n")
             for header in sc_dict:
                 out.write(header + "," + str(sc_dict[header][0]) + "," + str(sc_dict[header][1]) + "\n")
 
@@ -395,8 +395,8 @@ rule merge_sc:
         aa_usage = "{sample}_aminoAcidUsage.csv"
     output:
         combined_5percent = "{sample}.combined_5percent_sc.csv",
-        mean_test = "{sample}.mean_sc.t_test.csv",
-        total_test = "{sample}.total_sc.t_test.csv"
+        mean_test = "{sample}.mean_sc_t_test.csv",
+        total_test = "{sample}.total_sc_t_test.csv"
     conda:
         "envs/r.yaml"
     shell:
