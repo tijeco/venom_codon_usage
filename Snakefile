@@ -390,7 +390,7 @@ rule aa_usage:
 
 rule merge_sc:
     input:
-        script = "src/sc.R"
+        script = "src/sc.R",
         quant = "{sample}_merged_quant.csv",
         aa_usage = "{sample}_aminoAcidUsage.csv"
     output:
