@@ -1,9 +1,10 @@
-name: vcu
+name: codon
 channels:
   - bioconda
+  - conda-forge
 dependencies:
   - python=3.6
   - sra-tools=2.8.0
-  - snakemake=3.13.3
+  - snakemake=5.3.0
   - biopython=1.76
   # - pandas
