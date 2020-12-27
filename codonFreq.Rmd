@@ -1,0 +1,71 @@
+```{r}
+library(DT, help, pos = 2, lib.loc = NULL)
+library(tidyverse, help, pos = 2, lib.loc = NULL)
+```
+
+## Highly expressed tissue-specific genes
+
+```{r}
+tissueSpecific <- function(bodyQuantFile,venomQuantFile) {
+    bodyQuant <-  read.table(bodyQuantFile, header = T)
+    bodyQuant <- bodyQuant %>% select(Name,TPM) %>% filter(TPM > 2)
+    colnames(bodyQuant) <- c("header","bodyTPM")
+
+    venomQuant <-  read.table(venomQuantFile, header = T)
+    venomQuant <- venomQuant %>% select(Name,TPM) %>% filter(TPM > 2)
+    colnames(venomQuant) <- c("header","venomTPM")
+
+    diffQuant <- merge(bodyQuant,venomQuant) %>% mutate(logDiff = log10(bodyTPM) - log10(venomTPM))
+    venomSpecific <- diffQuant %>% filter(logDiff <= -1) %>% filter(venomTPM > 1000) %>% mutate(tissue = "venom")
+    bodySpecific <- diffQuant %>% filter(logDiff >= 1) %>% filter(bodyTPM > 1000) %>% mutate(tissue = "body")
+
+    finalDF <- full_join(venomSpecific,bodySpecific) %>% select(header, tissue)
+    return(finalDF)
+}
+```
+# Expression data 
+
+```{r}
+Eutolmus_rufibarbis_body_quant <- read.table("Eutolmus_rufibarbis_body_quant.sf",header = T)
+Eutolmus_rufibarbis_body_quant <- Eutolmus_rufibarbis_body_quant %>% select(Name,TPM) %>% filter(TPM > 2)
+colnames(Eutolmus_rufibarbis_body_quant) <- c("header","bodyTPM")
+
+Eutolmus_rufibarbis_venom_quant <- read.table("Eutolmus_rufibarbis_venom_quant.sf",header = T)
+Eutolmus_rufibarbis_venom_quant <- Eutolmus_rufibarbis_venom_quant %>% select(Name,TPM) %>% filter(TPM > 2)
+colnames(Eutolmus_rufibarbis_venom_quant) <- c("header","venomTPM")
+
+merge(Eutolmus_rufibarbis_body_quant,Eutolmus_rufibarbis_venom_quant) %>% mutate(logDiff = log10(bodyTPM) - log10(venomTPM)) %>% filter(logDiff <= -1) %>% filter(venomTPM > 1000) %>% mutate(tissue = "venom") %>% datatable()
+merge(Eutolmus_rufibarbis_body_quant,Eutolmus_rufibarbis_venom_quant) %>% mutate(logDiff = log10(bodyTPM) - log10(venomTPM)) %>% filter(logDiff >= 1) %>% filter(bodyTPM > 1000) %>% summary() 
+```
+
+```{r}
+Eutolmus_rufibarbis_tissue <- tissueSpecific("Eutolmus_rufibarbis_body_quant.sf","Eutolmus_rufibarbis_venom_quant.sf")
+Eutolmus_rufibarbis_tissue %>% datatable()
+```
+
+# Fop and Freq data
+
+```{r}
+Eutolmus_rufibarbiscodonFreq <- read.csv("data/Eutolmus_rufibarbis_complete_longest_isoform.codonFreq.csv")
+Eutolmus_rufibarbiscodonFOP <- read.csv("data/Eutolmus_rufibarbis.combined_5percent_fop.csv")
+```
+
+```{r}
+Eutolmus_rufibarbiscodonFOP %>% datatable()
+colnames(Eutolmus_rufibarbiscodonFOP)[1] <- "header"
+merge(Eutolmus_rufibarbiscodonFreq,Eutolmus_rufibarbiscodonFOP) %>% filter(aa == "Ala") %>% filter( tissue == "body") %>% group_by(header) %>% summarise(mean = mean(count)) %>% filter(mean > 4)  %>% datatable()
+```
+
+
+```{r}
+Eutolmus_rufibarbiscodonFreq %>% filter(aa == "Ala") %>% group_by(header) %>% summarise(mean = mean(count)) %>% filter(mean > 4)  %>% datatable()
+```
+
+```{r}
+Eutolmus_rufibarbiscodonFreq %>% group_by(header,aa)%>% summarise(mean = mean(count)) %>% filter(mean > 4) %>% group_by(aa) %>% summarise(n = n()) %>% datatable()
+```
+
+```{r}
+merge(Eutolmus_rufibarbiscodonFreq,Eutolmus_rufibarbiscodonFOP) %>% group_by(header,aa,tissue)%>% summarise(mean = mean(count)) %>% filter(mean > 4) %>% group_by(aa,tissue) %>% summarise(n = n()) %>% datatable()
+```
+
