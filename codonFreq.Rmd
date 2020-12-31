@@ -23,26 +23,68 @@ tissueSpecific <- function(bodyQuantFile,venomQuantFile) {
     return(finalDF)
 }
 ```
-# Expression data 
+
+
+## plot codon usage for tissue specific genes
 
 ```{r}
-Eutolmus_rufibarbis_body_quant <- read.table("Eutolmus_rufibarbis_body_quant.sf",header = T)
-Eutolmus_rufibarbis_body_quant <- Eutolmus_rufibarbis_body_quant %>% select(Name,TPM) %>% filter(TPM > 2)
-colnames(Eutolmus_rufibarbis_body_quant) <- c("header","bodyTPM")
-
-Eutolmus_rufibarbis_venom_quant <- read.table("Eutolmus_rufibarbis_venom_quant.sf",header = T)
-Eutolmus_rufibarbis_venom_quant <- Eutolmus_rufibarbis_venom_quant %>% select(Name,TPM) %>% filter(TPM > 2)
-colnames(Eutolmus_rufibarbis_venom_quant) <- c("header","venomTPM")
-
-merge(Eutolmus_rufibarbis_body_quant,Eutolmus_rufibarbis_venom_quant) %>% mutate(logDiff = log10(bodyTPM) - log10(venomTPM)) %>% filter(logDiff <= -1) %>% filter(venomTPM > 1000) %>% mutate(tissue = "venom") %>% datatable()
-merge(Eutolmus_rufibarbis_body_quant,Eutolmus_rufibarbis_venom_quant) %>% mutate(logDiff = log10(bodyTPM) - log10(venomTPM)) %>% filter(logDiff >= 1) %>% filter(bodyTPM > 1000) %>% summary() 
+plot_tissueCodonUsage <- function(body_quant,venom_quant, codonFreqFile, optimized_codonFile){
+    tissue <- tissueSpecific(body_quant,venom_quant)
+    optimalCodons <- read.csv(optimized_codonFile)
+    codonFreq <- read.csv(codonFreqFile)
+    codonUsagePlot <- merge(codonFreq , tissue) %>% 
+        group_by(aa,codon,tissue) %>% 
+        filter(aa != "Stop") %>% 
+        summarise(sum = sum(count)) %>% 
+        group_by(aa,tissue) %>% 
+        mutate(tot = sum(sum),freq = sum/tot,optimal = codon %in% optimalCodons$codon) %>% 
+        ggplot(aes(y=freq,x = codon, fill = tissue,col = optimal)) + 
+            geom_bar(stat="identity",position = "dodge") + 
+            facet_wrap(~aa, scales="free_x") + 
+            scale_color_manual(values=c("red","black"))
+    return(codonUsagePlot)
+}
 ```
+
+## All together now!
+
+```{r}
+Eutolmus_rufibarbis_CodonUsagePlot <- plot_tissueCodonUsage("Eutolmus_rufibarbis_body_quant.sf","Eutolmus_rufibarbis_venom_quant.sf","data/Eutolmus_rufibarbis_complete_longest_isoform.codonFreq.csv","optimized_codons/Eutolmus_rufibarbis_body.optimalCodon.csv")
+```
+
+# Expression data 
+
+
 
 ```{r}
 Eutolmus_rufibarbis_tissue <- tissueSpecific("Eutolmus_rufibarbis_body_quant.sf","Eutolmus_rufibarbis_venom_quant.sf")
 Eutolmus_rufibarbis_tissue %>% datatable()
 ```
 
+# Optimal codon
+
+```{r}
+Eutolmus_rufibarbis_optimalCodon <- read.csv("optimized_codons/Eutolmus_rufibarbis_body.optimalCodon.csv")
+Eutolmus_rufibarbis_optimalCodon
+```
+
+# Codon frequency
+
+```{r}
+Eutolmus_rufibarbiscodonFreq <- read.csv("data/Eutolmus_rufibarbis_complete_longest_isoform.codonFreq.csv")
+merge(Eutolmus_rufibarbiscodonFreq , Eutolmus_rufibarbis_tissue) %>% group_by(header,aa,tissue)%>% summarise(mean = mean(count)) %>% filter(mean > 4) %>% group_by(aa,tissue) %>% summarise(n = n()) %>% datatable()
+#  %>% ggplot(aes(x = tissue, y = n)) + geom_boxplot()
+```
+
+
+```{r}
+merge(Eutolmus_rufibarbiscodonFreq , Eutolmus_rufibarbis_tissue) %>% group_by(header,aa,tissue)%>% summarise(mean = mean(count)) %>% filter(mean > 4) %>% datatable()
+```
+
+```{r}
+merge(Eutolmus_rufibarbiscodonFreq , Eutolmus_rufibarbis_tissue) %>% group_by(aa,codon,tissue)%>% filter(aa != "Stop") %>% summarise(sum = sum(count)) %>% group_by(aa,tissue) %>% mutate(tot = sum(sum),freq = sum/tot,optimal = codon %in% Eutolmus_rufibarbis_optimalCodon$codon) %>% ggplot(aes(y=freq,x = codon, fill = tissue,col = optimal)) + geom_bar(stat="identity",position = "dodge") + facet_wrap(~aa, scales="free_x") + scale_color_manual(values=c("red","black"))
+# %>% datatable()
+```
 # Fop and Freq data
 
 ```{r}
@@ -51,7 +93,7 @@ Eutolmus_rufibarbiscodonFOP <- read.csv("data/Eutolmus_rufibarbis.combined_5perc
 ```
 
 ```{r}
-Eutolmus_rufibarbiscodonFOP %>% datatable()
+Eutolmus_rufibarbiscodonFOP %>% gather(c("TPM.venom","TPM.body"),"TPM") %>% datatable()
 colnames(Eutolmus_rufibarbiscodonFOP)[1] <- "header"
 merge(Eutolmus_rufibarbiscodonFreq,Eutolmus_rufibarbiscodonFOP) %>% filter(aa == "Ala") %>% filter( tissue == "body") %>% group_by(header) %>% summarise(mean = mean(count)) %>% filter(mean > 4)  %>% datatable()
 ```
@@ -69,3 +111,12 @@ Eutolmus_rufibarbiscodonFreq %>% group_by(header,aa)%>% summarise(mean = mean(co
 merge(Eutolmus_rufibarbiscodonFreq,Eutolmus_rufibarbiscodonFOP) %>% group_by(header,aa,tissue)%>% summarise(mean = mean(count)) %>% filter(mean > 4) %>% group_by(aa,tissue) %>% summarise(n = n()) %>% datatable()
 ```
 
+
+
+
+
+```{r}
+
+Eutolmus_rufibarbiscodonFOP %>% gather(TPM_tissue,TPM,TPM.venom:TPM.body) %>% ggplot(aes(y = log(TPM), x = fop, col = TPM_tissue)) + geom_point() + geom_smooth(method = "lm")
+Eutolmus_rufibarbiscodonFOP %>% ggplot(aes( x = fop)) + geom_point(aes(y = log10(TPM.body))) + geom_smooth(aes(y = log10(TPM.body)),method = "lm") + geom_point(aes(y = log10(TPM.venom))) + geom_smooth(aes(y = log10(TPM.venom)),method = "lm")
+```
